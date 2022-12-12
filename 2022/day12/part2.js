@@ -1,0 +1,59 @@
+const solution = (input) => {
+  const nodes = input.split(/\n/).map((line) => line.split(""));
+
+  let endX;
+  let endY;
+
+  const MAX = Number.MAX_SAFE_INTEGER;
+
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = 0; j < nodes[i].length; j++) {
+      const node = {
+        depth: MAX,
+        visited: false,
+        value: nodes[i][j]
+      }
+      if (nodes[i][j] === "S") {
+        node.value = "a";
+      }
+      if (nodes[i][j] === "E") {
+        endX = i;
+        endY = j;
+        node.value = "z";
+      }
+      nodes[i][j] = node;
+    }
+  }
+
+  const queue = [];
+  nodes[endX][endY].depth = 0;
+  nodes[endX][endY].visited = true;
+  queue.push([endX, endY]);
+  while (queue.length !== 0) {
+    const [x, y] = queue.shift();
+    const current = nodes[x][y];
+
+    [[x+1,y], [x,y+1], [x-1,y], [x,y-1]].forEach(([xx, yy]) => {
+      if (xx < 0 || yy < 0 || xx >= nodes.length || yy >= nodes[0].length) { return; }
+      if (nodes[xx][yy].value.charCodeAt(0) - current.value.charCodeAt(0) >= -1) {
+        nodes[xx][yy].depth = Math.min(nodes[x][y].depth + 1, nodes[xx][yy].depth);
+        if (!nodes[xx][yy].visited) {
+          queue.push([xx, yy]);
+          nodes[xx][yy].visited = true;
+        }
+      }
+    })
+  }
+
+  let min = MAX;
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = 0; j < nodes[i].length; j++) {
+      if (nodes[i][j].value === "a" && nodes[i][j].depth < min) {
+        min = nodes[i][j].depth;
+      }
+    }
+  }
+  return min;
+};
+
+module.exports = solution;

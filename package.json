@@ -1,0 +1,17 @@
+{
+  "name": "aventofcode",
+  "version": "0.0.1",
+  "description": "Advent of Code",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Huu Nguyen",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "4.1.2",
+    "chokidar": "^3.5.3",
+    "commander": "^9.4.1"
+  }
+}
