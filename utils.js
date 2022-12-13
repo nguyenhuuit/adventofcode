@@ -7,3 +7,6 @@ global.max = Math.max;
 Array.prototype.sum = function() {
   return this.reduce((acc, v) => (acc += v), 0)
 }
+Array.prototype.mul = function() {
+  return this.reduce((acc, v) => (acc *= v), 1)
+}

@@ -25,10 +25,14 @@ const filesToWatch = [
 
 const watcher = chokidar.watch(filesToWatch);
 const execute = () => {
-  const solution = require(solutionFile);
-  const input = fs.readFileSync(inputFile, "utf8");
-  const result = solution(input);
-  log('[RESULT] :', chalk.bold(chalk.greenBright(result)));
+  try {
+    const solution = require(solutionFile);
+    const input = fs.readFileSync(inputFile, "utf8");
+    const result = solution(input);
+    log('[RESULT] :', chalk.bold(chalk.greenBright(result)));
+  } catch (err) {
+    log('[ERROR]  :', err)
+  }
 }
 
 watcher.on('change', path => {
