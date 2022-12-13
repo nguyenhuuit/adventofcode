@@ -16,7 +16,7 @@ const { year, day, part } = program.opts();
 log(`YEAR=${year} DAY=${day} PART=${part}`)
 
 let solutionFile = `./${year}/day${day}/part${part}.js`;
-let inputFile = `./${year}/day${day}/input.txt`;
+let inputFile = `./${year}/day${day}/sample.txt`;
 
 const filesToWatch = [
   solutionFile,
