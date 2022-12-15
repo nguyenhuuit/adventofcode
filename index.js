@@ -27,9 +27,10 @@ const watcher = chokidar.watch(filesToWatch);
 const execute = () => {
   try {
     const solution = require(solutionFile);
+    const isSample = inputFile.includes('sample');
     const input = fs.readFileSync(inputFile, "utf8");
     const before = performance.now();
-    const result = solution(input);
+    const result = solution(input, isSample);
     const after = performance.now();
     log('[RESULT] :', chalk.bold(chalk.greenBright(result)), `(${(after-before).toFixed(2)}ms)`);
   } catch (err) {
