@@ -28,8 +28,10 @@ const execute = () => {
   try {
     const solution = require(solutionFile);
     const input = fs.readFileSync(inputFile, "utf8");
+    const before = performance.now();
     const result = solution(input);
-    log('[RESULT] :', chalk.bold(chalk.greenBright(result)));
+    const after = performance.now();
+    log('[RESULT] :', chalk.bold(chalk.greenBright(result)), `(${(after-before).toFixed(2)}ms)`);
   } catch (err) {
     log('[ERROR]  :', err)
   }
@@ -62,6 +64,7 @@ process.stdin.on('data', data => {
       execute();
       break;
     }
+    case 's':
     case 'sample': {
       watcher.unwatch(inputFile);
       inputFile = inputFile.replace("input", "sample");
@@ -70,6 +73,7 @@ process.stdin.on('data', data => {
       execute();
       break;
     }
+    case 'i':
     case 'input': {
       watcher.unwatch(inputFile);
       inputFile = inputFile.replace("sample", "input");
@@ -78,6 +82,9 @@ process.stdin.on('data', data => {
       execute();
       break;
     }
+    case 'quit':
+    case 'exit':
+    case 'q': process.exit();
     default:
   }
 });
