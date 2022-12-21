@@ -3,6 +3,7 @@ const fs = require('fs');
 const chalk = require('chalk');
 const chokidar = require('chokidar');
 const { program, Option } = require('commander');
+const { submit } = require("./api");
 
 program
   .addOption(new Option('-y, --year <year>').default('2022'))
@@ -12,6 +13,13 @@ program
 program.parse();
 
 const { year, day, part } = program.opts();
+
+const state = {
+  year,
+  day,
+  part,
+  answer: undefined,
+};
 
 log(`YEAR=${year} DAY=${day} PART=${part}`)
 
@@ -32,8 +40,10 @@ const execute = () => {
     const before = performance.now();
     const result = solution(input, isSample);
     const after = performance.now();
+    state.answer = result;
     log('[RESULT] :', chalk.bold(chalk.greenBright(result)), `(${(after-before).toFixed(2)}ms)`);
   } catch (err) {
+    state.answer = undefined;
     log('[ERROR]  :', err)
   }
 }
@@ -49,11 +59,19 @@ watcher.on('change', path => {
 process.stdin.on('data', data => {
   const cmd = data.toString().trim();
   switch (cmd) {
+    case "rp":
+    case "repeat": {
+      delete require.cache[require.resolve(solutionFile)]
+      execute();
+      break;
+    }
     case 'p1': {
       watcher.unwatch(solutionFile);
       solutionFile = solutionFile.replace("part2", "part1");
       watcher.add(solutionFile);
-      log("[WATCH]  :", solutionFile);
+      log("[WATCH]  :", solutionFile.replace("./", ""));
+      delete require.cache[require.resolve(solutionFile)]
+      state.part = 1;
       execute();
       break;
     }
@@ -61,7 +79,9 @@ process.stdin.on('data', data => {
       watcher.unwatch(solutionFile);
       solutionFile = solutionFile.replace("part1", "part2");
       watcher.add(solutionFile);
-      log("[WATCH]  :", solutionFile);
+      log("[WATCH]  :", solutionFile.replace("./", ""));
+      delete require.cache[require.resolve(solutionFile)];
+      state.part = 2;
       execute();
       break;
     }
@@ -70,7 +90,7 @@ process.stdin.on('data', data => {
       watcher.unwatch(inputFile);
       inputFile = inputFile.replace("input", "sample");
       watcher.add(inputFile);
-      log("[WATCH]  :", inputFile);
+      log("[WATCH]  :", inputFile.replace("./", ""));
       execute();
       break;
     }
@@ -79,8 +99,21 @@ process.stdin.on('data', data => {
       watcher.unwatch(inputFile);
       inputFile = inputFile.replace("sample", "input");
       watcher.add(inputFile);
-      log("[WATCH]  :", inputFile);
+      log("[WATCH]  :", inputFile.replace("./", ""));
       execute();
+      break;
+    }
+    case 'submit': {
+      if (state.answer !== null && state.answer !== undefined) {
+        submit(state.answer, state.part, state.day, state.year)
+        .then(rs => {
+            log(`[SUBMIT] : ${rs}`);
+        })
+        .catch(err => {
+          log(err);
+          log(`[SUBMIT] : Failed ${err.message}`);
+        })
+      }
       break;
     }
     case 'quit':

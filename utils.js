@@ -1,4 +1,5 @@
 global.int = (s) => parseInt(s, 10);
+global.float = (s) => parseFloat(s, 10);
 global.log = console.log.bind(console);
 global.isArray = arr => Array.isArray(arr);
 global.isNumber = n => typeof n === 'number';
@@ -19,4 +20,7 @@ Set.prototype.addArr = function(array) {
 }
 Set.prototype.hasArr = function(array) {
   return this.has(array+"");
+}
+String.prototype.replaceAt = function(index, replacement) {
+  return this.substring(0, index) + replacement + this.substring(index + replacement.length);
 }
