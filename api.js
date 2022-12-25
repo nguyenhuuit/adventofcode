@@ -5,6 +5,12 @@ const chalk = require('chalk');
 const HOST = 'https://adventofcode.com'
 const { SESSION } = process.env;
 
+const decode = str => {
+  return str
+    .replaceAll('&gt;', ">")
+    .replaceAll('&lt;', "<")
+}
+
 const submit = async (answer, level, day, year) => {
   const url = `${HOST}/${year}/day/${day}/answer`;
   const data = `level=${level}&answer=${answer}`;
@@ -37,6 +43,42 @@ const submit = async (answer, level, day, year) => {
   return "Unknown response";
 };
 
+const SAMPLE_REGEX = /\(your puzzle input\)[\s\S]*?<code>([\s\S]+?)<\/code>/;
+const getSample = async (day, year) => {
+  const url = `${HOST}/${year}/day/${day}`;
+  log('[DOWNLOAD]:', url);
+  const resp = await axios({
+    method: 'GET',
+    url,
+    headers: {
+      cookie: `session=${SESSION};`
+    }
+  });
+  if (resp.data) {
+    const matches = resp.data.match(SAMPLE_REGEX);
+    if (matches) {
+      return decode(matches[1]).trim()
+    }
+  }
+}
+
+const getInput = async (day, year) => {
+  const url = `${HOST}/${year}/day/${day}/input`;
+  log('[DOWNLOAD]:', url);
+  const resp = await axios({
+    method: 'GET',
+    url,
+    headers: {
+      cookie: `session=${SESSION};`
+    }
+  });
+  if (resp.data) {
+    return resp.data.trim();
+  }
+}
+
 module.exports = {
-  submit
+  submit,
+  getSample,
+  getInput
 };

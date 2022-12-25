@@ -21,6 +21,9 @@ Set.prototype.addArr = function(array) {
 Set.prototype.hasArr = function(array) {
   return this.has(array+"");
 }
+Set.prototype.deleteArr = function(array) {
+  return this.delete(array+"");
+}
 String.prototype.replaceAt = function(index, replacement) {
   return this.substring(0, index) + replacement + this.substring(index + replacement.length);
 }
