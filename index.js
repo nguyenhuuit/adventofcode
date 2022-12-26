@@ -95,11 +95,14 @@ const executePython = async () => {
     { cwd: `./${state.year}/day${state.day}/` },
     (error, stdout, stderr) => {
       if (error) {
+        log(stdout)
         log('[ERROR]  :', stderr);
         return;
       }
       const after = performance.now();
-      state.answer = stdout.trim().split(/\n/).last();
+      const lines = stdout.trim().split(/\n/)
+      log(lines.slice(0,lines.length -1).join("\n"))
+      state.answer = lines.last();
       log('[RESULT] :', chalk.bold(chalk.greenBright(state.answer)), `(${(after-before).toFixed(2)}ms)`);
     },
   )
