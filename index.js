@@ -5,7 +5,7 @@ const chalk = require('chalk');
 const chokidar = require('chokidar');
 const { program, Option } = require('commander');
 const { submit, getSample, getInput } = require("./api");
-const { EXTS } = require("./constants");
+const { EXTS, TEMPLATES } = require("./constants");
 
 program
   .addOption(new Option('-y, --year <year>').default('2022'))
@@ -26,16 +26,6 @@ const state = {
   answer: undefined,
 };
 
-const pythonTemplate = `def solution(input):
-  return None
-`;
-
-const jsTemplate = `const solution = input => {
-  return null;
-}
-module.exports = solution;
-`;
-
 const getSolutionFile = () => {
   const dir = `./${state.year}/day${state.day}/`;
   if (!fs.existsSync(dir)) {
@@ -43,15 +33,8 @@ const getSolutionFile = () => {
   }
   const file = `./${state.year}/day${state.day}/part${state.part}.${EXTS[state.language]}`;
   if (!fs.existsSync(file)) {
-    switch (state.language) {
-      case 'javascript': {
-        fs.writeFileSync(file, jsTemplate, { flag: 'as+' });
-        break;
-      }
-      case 'python': {
-        fs.writeFileSync(file, pythonTemplate, { flag: 'as+' });
-        break;
-      }
+    if (TEMPLATES[state.language]) {
+      fs.writeFileSync(file, TEMPLATES[state.language], { flag: 'as+' });
     }
   }
   return file;
@@ -81,11 +64,31 @@ const execute = async () => {
   switch (state.language) {
     case 'javascript': executeJavascript(); break;
     case 'python': executePython(); break;
+    case 'java': executeJava(); break;
     default: throw Error('Unknown language')
   }
 }
 
-
+const executeJava = async () => {
+  getSolutionFile();
+  getInputFile();
+  const before = performance.now();
+  exec(`java part${state.part}.java ${state.input}.txt`,
+    { cwd: `./${state.year}/day${state.day}/` },
+    (error, stdout, stderr) => {
+      if (error) {
+        log(stdout)
+        log('[ERROR]  :', stderr);
+        return;
+      }
+      const after = performance.now();
+      const lines = stdout.trim().split(/\n/)
+      log(lines.slice(0,lines.length -1).join("\n"))
+      state.answer = lines.last();
+      log('[RESULT] :', chalk.bold(chalk.greenBright(state.answer)), `(${(after-before).toFixed(2)}ms)`);
+    },
+  )
+}
 
 const executePython = async () => {
   getSolutionFile();
@@ -166,11 +169,15 @@ const start = async () => {
       }
       case 's':
       case 'sample': {
-        watcher.unwatch(getInputFile());
-        state.input = 'sample';
-        watcher.add(getInputFile());
-        log("[WATCH]  :", getInputFile().replace("./", ""));
-        execute();
+        getInputFile().then(oldFile => {
+          watcher.unwatch(oldFile);
+          state.input = 'sample';
+          getInputFile().then(newFile => {
+            watcher.add(newFile);
+            log("[WATCH]  :", newFile.replace("./", ""));
+            execute();
+          })
+        })
         break;
       }
       case 'i':
@@ -183,9 +190,7 @@ const start = async () => {
             log("[WATCH]  :", newFile.replace("./", ""));
             execute();
           })
-          
         })
-        
         break;
       }
       case 'submit': {
@@ -211,6 +216,7 @@ const start = async () => {
       }
       case 'quit':
       case 'exit':
+      case 'e':
       case 'q': process.exit();
       default:
     }
