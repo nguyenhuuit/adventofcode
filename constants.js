@@ -21,6 +21,9 @@ const JAVA_TEMPLATE =
 import java.nio.file.Path;
 
 class Solution {
+  public static void log(Object o) {
+    System.out.println(o);
+  }
   public static String solve(String input) {
     return null;
   } 
