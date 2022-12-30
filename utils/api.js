@@ -2,14 +2,14 @@ require('dotenv').config();
 const axios = require('axios');
 const chalk = require('chalk');
 
-const HOST = 'https://adventofcode.com'
+const HOST = 'https://adventofcode.com';
 const { SESSION } = process.env;
 
 const decode = str => {
   return str
-    .replaceAll('&gt;', ">")
-    .replaceAll('&lt;', "<")
-}
+    .replaceAll('&gt;', '>')
+    .replaceAll('&lt;', '<');
+};
 
 const submit = async (answer, level, day, year) => {
   const url = `${HOST}/${year}/day/${day}/answer`;
@@ -25,22 +25,22 @@ const submit = async (answer, level, day, year) => {
   });
   let matches = resp.data.match(/(That's (not )?the right answer)/);
   if (matches) {
-    if (matches[1] === "That's the right answer") {
-      return chalk.bold(chalk.greenBright(answer + " -> Right answer"));
+    if (matches[1] === 'That\'s the right answer') {
+      return chalk.bold(chalk.greenBright(answer + ' -> Right answer'));
     } else {
       const waitingTime = resp.data.match(/please wait (.*) before/);
       if (waitingTime) {
-        return chalk.bold(chalk.redBright(answer + " -> Wrong answer, please wait " + waitingTime[1] ));
+        return chalk.bold(chalk.redBright(answer + ' -> Wrong answer, please wait ' + waitingTime[1] ));
       } else {
-        return chalk.bold(chalk.redBright(answer + " -> Wrong answer"));
+        return chalk.bold(chalk.redBright(answer + ' -> Wrong answer'));
       }
     }
   }
   matches = resp.data.match(/You have (.*) left to wait/);
   if (matches) {
-    return chalk.bold(chalk.redBright("Submit wrong answer recently, please wait " + matches[1] ));
+    return chalk.bold(chalk.redBright('Submit wrong answer recently, please wait ' + matches[1] ));
   }
-  return "Unknown response";
+  return 'Unknown response';
 };
 
 const SAMPLE_REGEX = /\(your puzzle input\)[\s\S]*?<code>([\s\S]+?)<\/code>/;
@@ -57,10 +57,10 @@ const getSample = async (day, year) => {
   if (resp.data) {
     const matches = resp.data.match(SAMPLE_REGEX);
     if (matches) {
-      return decode(matches[1]).trim()
+      return decode(matches[1]).trim();
     }
   }
-}
+};
 
 const getInput = async (day, year) => {
   const url = `${HOST}/${year}/day/${day}/input`;
@@ -75,7 +75,7 @@ const getInput = async (day, year) => {
   if (resp.data) {
     return resp.data.trim();
   }
-}
+};
 
 module.exports = {
   submit,

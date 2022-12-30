@@ -1,8 +1,8 @@
-const EXTS = {
+const EXTENSIONS = {
   javascript: 'js',
   python: 'py',
   java: 'java'
-}
+};
 
 const PYTHON_TEMPLATE =
 `def solution(input):
@@ -36,15 +36,15 @@ class Solution {
       System.exit(1);
     }
   }
-}`
+}`;
 
 const TEMPLATES = {
   javascript: JAVASCRIPT_TEMPLATE,
   python: PYTHON_TEMPLATE,
   java: JAVA_TEMPLATE
-}
+};
 
 module.exports = {
-  EXTS,
+  EXTENSIONS,
   TEMPLATES
-}
+};
