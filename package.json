@@ -12,7 +12,7 @@
     "axios": "^1.2.2",
     "chalk": "^4.1.2",
     "chokidar": "^3.5.3",
-    "commander": "^9.4.1",
+    "commander": "^9.5.0",
     "dotenv": "^16.0.3"
   },
   "devDependencies": {
