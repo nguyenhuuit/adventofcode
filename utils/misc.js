@@ -5,7 +5,7 @@ const { TEMPLATES, EXTENSIONS } = require('./languages');
 const getSolutionFile = (state) => {
   const dir = `./${state.year}/day${state.day}/`;
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
+    fs.mkdirSync(dir, { recursive: true });
   }
   const file = `./${state.year}/day${state.day}/part${state.part}.${EXTENSIONS[state.language]}`;
   if (!fs.existsSync(file)) {
@@ -29,6 +29,7 @@ const getInputFile = async (state) => {
     } else if (state.input === 'input') {
       data = await getInput(state.day, state.year);
     }
+    data = data || ''
     fs.writeFileSync(file, data, { flag: 'as+' });
   }
   return file;
