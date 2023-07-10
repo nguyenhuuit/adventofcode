@@ -1,11 +1,11 @@
 require('./utils/global');
-const { exec } = require('child_process');
-const fs = require('fs');
-const chalk = require('chalk');
+
 const chokidar = require('chokidar');
+const chalk = require('chalk');
 const { program, Option } = require('commander');
 const { submit } = require('./utils/api');
 const { getInputFile, getSolutionFile } = require('./utils/misc');
+const { execute } = require('./utils/executors');
 
 program
   .addOption(new Option('-y, --year <year>').default('2022'))
@@ -14,6 +14,9 @@ program
   .addOption(new Option('-p, --part <part>').makeOptionMandatory());
 
 program.parse();
+
+const italicOrange = chalk.hex('#FF8800').italic;
+const boldOrange = chalk.hex('#FF8800').bold;
 
 const { year, day, part, language } = program.opts();
 
@@ -26,75 +29,7 @@ const state = {
   answer: undefined,
 };
 
-log(`YEAR=${year} DAY=${day} PART=${part}`);
-
-const execute = async () => {
-  switch (state.language) {
-  case 'javascript': executeJavascript(); break;
-  case 'python': executePython(); break;
-  case 'java': executeJava(); break;
-  default: throw Error('Unknown language');
-  }
-};
-
-const executeJava = async () => {
-  getSolutionFile(state);
-  getInputFile(state);
-  const before = performance.now();
-  exec(`java part${state.part}.java ${state.input}.txt`,
-    { cwd: `./${state.year}/day${state.day}/` },
-    (error, stdout, stderr) => {
-      if (error) {
-        log(stdout);
-        log('[ERROR]  :', stderr);
-        return;
-      }
-      const after = performance.now();
-      const lines = stdout.trim().split(/\n/);
-      log(lines.slice(0,lines.length -1).join('\n'));
-      state.answer = lines.last();
-      log('[RESULT] :', chalk.bold(chalk.greenBright(state.answer)), `(${(after-before).toFixed(2)}ms)`);
-    },
-  );
-};
-
-const executePython = async () => {
-  getSolutionFile(state);
-  getInputFile(state);
-  const before = performance.now();
-  exec(`python -B -c 'from part${state.part} import solution\nwith open("${state.input}.txt") as inp: print(solution(inp.read().strip()));'`,
-    { cwd: `./${state.year}/day${state.day}/` },
-    (error, stdout, stderr) => {
-      if (error) {
-        log(stdout);
-        log('[ERROR]  :', stderr);
-        return;
-      }
-      const after = performance.now();
-      const lines = stdout.trim().split(/\n/);
-      log(lines.slice(0,lines.length -1).join('\n'));
-      state.answer = lines.last();
-      log('[RESULT] :', chalk.bold(chalk.greenBright(state.answer)), `(${(after-before).toFixed(2)}ms)`);
-    },
-  );
-};
-
-const executeJavascript = async () => {
-  const solutionFile = getSolutionFile(state);
-  const inputFile = await getInputFile(state);
-  try {
-    const solution = require(solutionFile);
-    const isSample = state.input === 'sample';
-    const input = fs.readFileSync(inputFile, 'utf8');
-    const before = performance.now();
-    state.answer = solution(input, isSample);
-    const after = performance.now();
-    log('[RESULT] :', chalk.bold(chalk.greenBright(state.answer)), `(${(after-before).toFixed(2)}ms)`);
-  } catch (err) {
-    state.answer = undefined;
-    log('[ERROR]  :', err);
-  }
-};
+log('[🚗]', boldOrange(`Year ${year}, day ${day}, part ${part}`));
 
 const start = async () => {
   const solutionFile = getSolutionFile(state);
@@ -102,39 +37,42 @@ const start = async () => {
 
   const watcher = chokidar.watch([solutionFile, inputFile]);
   watcher.on('change', path => {
-    log(`[UPDATED]: ${path}`);
+    log(`\n[📝] ${italicOrange(path)}`);
     if (state.language === 'javascript') {
       delete require.cache[require.resolve(solutionFile)];
     }
-    execute();
+    execute(state);
   });
   process.stdin.on('data', data => {
     const cmd = data.toString().trim();
+    process.stdout.moveCursor(0, -1);
+    process.stdout.clearLine(1);
+    process.stdout.moveCursor(0, 1);
     switch (cmd) {
     case 'rp':
     case 'repeat': {
       if (state.language === 'javascript') {
         delete require.cache[require.resolve(getSolutionFile(state))];
       }
-      execute();
+      execute(state);
       break;
     }
     case 'p1': {
       watcher.unwatch(getSolutionFile(state));
       state.part = 1;
       watcher.add(getSolutionFile(state));
-      log('[WATCH]  :', getSolutionFile(state).replace('./', ''));
+      log('[📺]', italicOrange(getSolutionFile(state).replace('./', '')));
       delete require.cache[require.resolve(getSolutionFile(state))];
-      execute();
+      execute(state);
       break;
     }
     case 'p2': {
       watcher.unwatch(getSolutionFile(state));
       state.part = 2;
       watcher.add(getSolutionFile(state));
-      log('[WATCH]  :', getSolutionFile(state).replace('./', ''));
+      log('[📺]', italicOrange(getSolutionFile(state).replace('./', '')));
       delete require.cache[require.resolve(getSolutionFile(state))];
-      execute();
+      execute(state);
       break;
     }
     case 's':
@@ -144,8 +82,8 @@ const start = async () => {
         state.input = 'sample';
         getInputFile(state).then(newFile => {
           watcher.add(newFile);
-          log('[WATCH]  :', newFile.replace('./', ''));
-          execute();
+          log('[📺]', italicOrange(newFile.replace('./', '')));
+          execute(state);
         });
       });
       break;
@@ -157,17 +95,23 @@ const start = async () => {
         state.input = 'input';
         getInputFile(state).then(newFile => {
           watcher.add(newFile);
-          log('[WATCH]  :', newFile.replace('./', ''));
-          execute();
+          log('[📺]', italicOrange(newFile.replace('./', '')));
+          execute(state);
         });
       });
       break;
     }
+    case 'su':
+    case 'sm':
     case 'submit': {
       if (state.answer !== null && state.answer !== undefined) {
         submit(state.answer, state.part, state.day, state.year)
           .then(rs => {
-            log(`[SUBMIT] : ${rs}`);
+            if (rs.includes('Right answer')) {
+              log(`[🟢] : ${rs}`);
+            } else {
+              log(`[🔴] : ${rs}`);
+            }
           })
           .catch(err => {
             log(err);
@@ -181,7 +125,7 @@ const start = async () => {
       watcher.unwatch(getSolutionFile(state));
       state.language = cmd;
       watcher.add(getSolutionFile(state));
-      execute();
+      execute(state);
       break;
     }
     case 'quit':
@@ -190,7 +134,7 @@ const start = async () => {
     case 'q': process.exit();
     }
   });
-  execute();
+  execute(state);
 };
 
 start();

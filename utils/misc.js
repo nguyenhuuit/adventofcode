@@ -19,7 +19,7 @@ const getSolutionFile = (state) => {
 const getInputFile = async (state) => {
   const dir = `./${state.year}/day${state.day}/`;
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
+    fs.mkdirSync(dir, { recursive: true });
   }
   const file = `./${state.year}/day${state.day}/${state.input}.txt`;
   if (!fs.existsSync(file)) {
@@ -29,7 +29,7 @@ const getInputFile = async (state) => {
     } else if (state.input === 'input') {
       data = await getInput(state.day, state.year);
     }
-    data = data || ''
+    data = data || '';
     fs.writeFileSync(file, data, { flag: 'as+' });
   }
   return file;

@@ -6,7 +6,7 @@ const EXTENSIONS = {
 
 const PYTHON_TEMPLATE =
 `def solution(input):
-  return None
+  pass
 `;
 
 const JAVASCRIPT_TEMPLATE =
