@@ -1,6 +1,7 @@
 require('dotenv').config();
 const axios = require('axios');
 const chalk = require('chalk');
+const { icon, link } = require('./formatter');
 
 const HOST = 'https://adventofcode.com';
 const { SESSION } = process.env;
@@ -46,7 +47,7 @@ const submit = async (answer, level, day, year) => {
 const SAMPLE_REGEX = /\(your puzzle input\)[\s\S]*?<code>([\s\S]+?)<\/code>/;
 const getSample = async (day, year) => {
   const url = `${HOST}/${year}/day/${day}`;
-  log('[DOWNLOAD]:', url);
+  log(icon('⏬'), link(url), '\n');
   const resp = await axios({
     method: 'GET',
     url,
@@ -64,7 +65,7 @@ const getSample = async (day, year) => {
 
 const getInput = async (day, year) => {
   const url = `${HOST}/${year}/day/${day}/input`;
-  log('[DOWNLOAD]:', url);
+  log(icon('⏬'), link(url), '\n');
   const resp = await axios({
     method: 'GET',
     url,
@@ -73,7 +74,7 @@ const getInput = async (day, year) => {
     }
   });
   if (resp.data) {
-    return resp.data.trim();
+    return (resp.data + '').trim();
   }
 };
 

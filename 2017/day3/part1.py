@@ -21,5 +21,4 @@ def solution(input):
       t = phia_truoc(toa_do, directions[current_direction],delta)
       marked.add(t)
       toa_do = t
-    print(toa_do[0],toa_do[1])
   return abs(toa_do[0]) + abs(toa_do[1])

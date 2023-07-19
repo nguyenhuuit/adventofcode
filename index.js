@@ -6,6 +6,7 @@ const { program, Option } = require('commander');
 const { submit } = require('./utils/api');
 const { getInputFile, getSolutionFile } = require('./utils/misc');
 const { execute } = require('./utils/executors');
+const { icon } = require('./utils/formatter');
 
 program
   .addOption(new Option('-y, --year <year>').default('2022'))
@@ -29,7 +30,7 @@ const state = {
   answer: undefined,
 };
 
-log('[🚗]', boldOrange(`Year ${year}, day ${day}, part ${part}`));
+log(icon('🚗'), boldOrange(`Year ${year}, day ${day}, part ${part}`));
 
 const start = async () => {
   const solutionFile = getSolutionFile(state);
@@ -37,7 +38,8 @@ const start = async () => {
 
   const watcher = chokidar.watch([solutionFile, inputFile]);
   watcher.on('change', path => {
-    log(`\n[📝] ${italicOrange(path)}`);
+    log();
+    log(icon('📝'), italicOrange(path));
     if (state.language === 'javascript') {
       delete require.cache[require.resolve(solutionFile)];
     }
@@ -61,7 +63,7 @@ const start = async () => {
       watcher.unwatch(getSolutionFile(state));
       state.part = 1;
       watcher.add(getSolutionFile(state));
-      log('[📺]', italicOrange(getSolutionFile(state).replace('./', '')));
+      log(icon('📺'), italicOrange(getSolutionFile(state).replace('./', '')));
       delete require.cache[require.resolve(getSolutionFile(state))];
       execute(state);
       break;
@@ -70,7 +72,7 @@ const start = async () => {
       watcher.unwatch(getSolutionFile(state));
       state.part = 2;
       watcher.add(getSolutionFile(state));
-      log('[📺]', italicOrange(getSolutionFile(state).replace('./', '')));
+      log(icon('📺'), italicOrange(getSolutionFile(state).replace('./', '')));
       delete require.cache[require.resolve(getSolutionFile(state))];
       execute(state);
       break;
@@ -82,7 +84,7 @@ const start = async () => {
         state.input = 'sample';
         getInputFile(state).then(newFile => {
           watcher.add(newFile);
-          log('[📺]', italicOrange(newFile.replace('./', '')));
+          log(icon('📺'), italicOrange(newFile.replace('./', '')));
           execute(state);
         });
       });
@@ -95,7 +97,7 @@ const start = async () => {
         state.input = 'input';
         getInputFile(state).then(newFile => {
           watcher.add(newFile);
-          log('[📺]', italicOrange(newFile.replace('./', '')));
+          log(icon('📺'), italicOrange(newFile.replace('./', '')));
           execute(state);
         });
       });
@@ -108,14 +110,14 @@ const start = async () => {
         submit(state.answer, state.part, state.day, state.year)
           .then(rs => {
             if (rs.includes('Right answer')) {
-              log(`[🟢] : ${rs}`);
+              log(icon('🟢'), rs);
             } else {
-              log(`[🔴] : ${rs}`);
+              log(icon('🔴'), rs);
             }
           })
           .catch(err => {
             log(err);
-            log(`[SUBMIT] : Failed ${err.message}`);
+            log(icon('🔴'), `Failed ${err.message}`);
           });
       }
       break;

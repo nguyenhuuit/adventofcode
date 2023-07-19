@@ -2,6 +2,7 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const chalk = require('chalk');
 const { getInputFile, getSolutionFile } = require('./misc');
+const { icon } = require('./formatter');
 
 const execute = async (state) => {
   switch (state.language) {
@@ -21,14 +22,14 @@ const executeJava = async (state) => {
     (error, stdout, stderr) => {
       if (error) {
         log(stdout);
-        log('[⛔️]', stderr);
+        log(icon('⛔️'), stderr);
         return;
       }
       const after = performance.now();
       const lines = stdout.trim().split(/\n/);
       log(lines.slice(0,lines.length -1).join('\n'));
       state.answer = lines.last();
-      log('[🚀]', chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${(after-before).toFixed(2)}ms`);
+      log(icon('🚀'), chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${(after-before).toFixed(2)}ms`);
     },
   );
 };
@@ -42,14 +43,14 @@ const executePython = async (state) => {
     (error, stdout, stderr) => {
       if (error) {
         log(stdout);
-        log('[⛔️]', stderr);
+        log(icon('⛔️'), stderr);
         return;
       }
       const after = performance.now();
       const lines = stdout.trim().split(/\n/);
       log(lines.slice(0,lines.length -1).join('\n'));
       state.answer = lines.last();
-      log('[🚀]', chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${(after-before).toFixed(2)}ms`);
+      log(icon('🚀'), chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${(after-before).toFixed(2)}ms`);
     },
   );
 };
@@ -64,10 +65,10 @@ const executeJavascript = async (state) => {
     const before = performance.now();
     state.answer = solution(input, isSample);
     const after = performance.now();
-    log('[🚀]', chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${(after-before).toFixed(2)}ms`);
+    log(icon('🚀'), chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${(after-before).toFixed(2)}ms`);
   } catch (err) {
     state.answer = undefined;
-    log('[⛔️]', err);
+    log(icon('⛔️'), err);
   }
 };
 
