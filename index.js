@@ -7,10 +7,11 @@ const { submit } = require('./utils/api');
 const { getInputFile, getSolutionFile } = require('./utils/misc');
 const { execute } = require('./utils/executors');
 const { icon } = require('./utils/formatter');
+const { validate, LANGUAGE_MAP } = require('./utils/prompter');
 
 program
   .addOption(new Option('-y, --year <year>').default('2022'))
-  .addOption(new Option('-l, --language <language>').default('javascript'))
+  .addOption(new Option('-l, --language <language>'))
   .addOption(new Option('-d, --day <day>').makeOptionMandatory())
   .addOption(new Option('-p, --part <part>').makeOptionMandatory());
 
@@ -19,18 +20,10 @@ program.parse();
 const italicOrange = chalk.hex('#FF8800').italic;
 const boldOrange = chalk.hex('#FF8800').bold;
 
-const { year, day, part, language } = program.opts();
-
 const state = {
-  year,
-  day,
-  part,
-  language,
   input: 'sample',
   answer: undefined,
 };
-
-log(icon('🚗'), boldOrange(`Year ${year}, day ${day}, part ${part}`));
 
 const start = async () => {
   const solutionFile = getSolutionFile(state);
@@ -139,4 +132,15 @@ const start = async () => {
   execute(state);
 };
 
-start();
+validate(program.opts())
+  .then(result => {
+    const { year, day, part, language } = result;
+    state.year = year;
+    state.day = day;
+    state.part = part;
+    state.language = LANGUAGE_MAP[language];
+    log(icon('🚗'), boldOrange(`Year ${year}, day ${day}, part ${part}, language ${language}`));
+    start();
+  });
+
+
