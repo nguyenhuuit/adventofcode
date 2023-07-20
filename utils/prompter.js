@@ -1,4 +1,4 @@
-const { Select } = require('enquirer');
+const { Select, Input } = require('enquirer');
 
 const LANGUAGE_MAP = {
   Python: 'python',
@@ -26,8 +26,44 @@ const validate = async (opts) => {
     language = await promptLanguage.run();
     log();
   }
-  // process.stdin.setRawMode(true);
+  if (!year) {
+    const promptYear = new Input({
+      name: 'year',
+      message: 'Select year',
+    });
+       
+    const answer = await promptYear.run();
+    year = answer;
+    log();
+  }
+  if (!day) {
+    const promptDay = new Input({
+      name: 'day',
+      message: 'Select day',
+    });
+       
+    const answer = await promptDay.run();
+    day = answer;
+    log();
+  }
+  if (!part) {
+    const promptPart = new Select({
+      name: 'part',
+      message: 'Select part',
+      choices: [
+        { name: 'Part 1' },
+        { name: 'Part 2' },
+      ]
+    });
+       
+    part = await promptPart.run() === 'Part 1' ? 1 : 2;
+    log();
+  }
+  process.stdin.resume();
   return { year, day, part, language };
 };
 
-module.exports = { validate, LANGUAGE_MAP };
+module.exports = {
+  validate,
+  LANGUAGE_MAP,
+};

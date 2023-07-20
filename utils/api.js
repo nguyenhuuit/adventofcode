@@ -47,7 +47,8 @@ const submit = async (answer, level, day, year) => {
 const SAMPLE_REGEX = /\(your puzzle input\)[\s\S]*?<code>([\s\S]+?)<\/code>/;
 const getSample = async (day, year) => {
   const url = `${HOST}/${year}/day/${day}`;
-  log(icon('⏬'), link(url), '\n');
+  log();
+  log(icon('⏬'), link(url));
   const resp = await axios({
     method: 'GET',
     url,
@@ -65,7 +66,8 @@ const getSample = async (day, year) => {
 
 const getInput = async (day, year) => {
   const url = `${HOST}/${year}/day/${day}/input`;
-  log(icon('⏬'), link(url), '\n');
+  log();
+  log(icon('⏬'), link(url));
   const resp = await axios({
     method: 'GET',
     url,

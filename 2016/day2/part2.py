@@ -13,7 +13,6 @@ def solution(input):
   global ma_tran
   for i in ds:
     for dc in i:
-      print(dc)
       if dc == "R":
         if cot == 4:
           continue

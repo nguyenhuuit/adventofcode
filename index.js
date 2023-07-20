@@ -10,10 +10,10 @@ const { icon } = require('./utils/formatter');
 const { validate, LANGUAGE_MAP } = require('./utils/prompter');
 
 program
-  .addOption(new Option('-y, --year <year>').default('2022'))
-  .addOption(new Option('-l, --language <language>'))
-  .addOption(new Option('-d, --day <day>').makeOptionMandatory())
-  .addOption(new Option('-p, --part <part>').makeOptionMandatory());
+  .addOption(new Option('-y, --year <year>'))
+  .addOption(new Option('-l, --language <language>').default('python'))
+  .addOption(new Option('-d, --day <day>'))
+  .addOption(new Option('-p, --part <part>'));
 
 program.parse();
 
@@ -38,11 +38,16 @@ const start = async () => {
     }
     execute(state);
   });
+  process.stdin.setRawMode(true);
   process.stdin.on('data', data => {
     const cmd = data.toString().trim();
-    process.stdout.moveCursor(0, -1);
-    process.stdout.clearLine(1);
-    process.stdout.moveCursor(0, 1);
+    if (!process.stdin.isRaw) {
+      process.stdout.moveCursor(0, -1);
+      process.stdout.clearLine(1);
+      process.stdout.moveCursor(0, 1);
+    } else {
+      log();
+    }
     switch (cmd) {
     case 'rp':
     case 'repeat': {
@@ -52,6 +57,7 @@ const start = async () => {
       execute(state);
       break;
     }
+    case '1':
     case 'p1': {
       watcher.unwatch(getSolutionFile(state));
       state.part = 1;
@@ -61,6 +67,7 @@ const start = async () => {
       execute(state);
       break;
     }
+    case '2':
     case 'p2': {
       watcher.unwatch(getSolutionFile(state));
       state.part = 2;
@@ -96,8 +103,7 @@ const start = async () => {
       });
       break;
     }
-    case 'su':
-    case 'sm':
+    case 'u':
     case 'submit': {
       if (state.answer !== null && state.answer !== undefined) {
         submit(state.answer, state.part, state.day, state.year)
@@ -123,6 +129,10 @@ const start = async () => {
       execute(state);
       break;
     }
+    case 'c':
+    case 'cls':
+    case 'clear': console.clear(); break;
+
     case 'quit':
     case 'exit':
     case 'e':
