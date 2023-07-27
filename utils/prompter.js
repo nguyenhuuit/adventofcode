@@ -4,7 +4,9 @@ const LANGUAGE_MAP = {
   Python: 'python',
   python: 'python',
   Javascript: 'javascript',
+  javascript: 'javascript',
   Java: 'java',
+  java: 'java',
   'C++': 'app'
 };
 

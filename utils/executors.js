@@ -59,7 +59,7 @@ const executeJavascript = async (state) => {
   const solutionFile = getSolutionFile(state);
   const inputFile = await getInputFile(state);
   try {
-    const solution = require(solutionFile);
+    const solution = require(`.${solutionFile}`);
     const isSample = state.input === 'sample';
     const input = fs.readFileSync(inputFile, 'utf8');
     const before = performance.now();

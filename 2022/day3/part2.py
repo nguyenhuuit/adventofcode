@@ -3,14 +3,13 @@ def solution(input):
   chuoi = input.split("\n")
   for i in range(len(chuoi)//3):
     h1 = chuoi[i*3]
-    h2 = chuoi[i*3+1]
-    h3 = chuoi[i*3+2]
-    chung = ""
+    h2 = set(chuoi[i*3+1])
+    h3 = set(chuoi[i*3+2])
     for j in h1:
-      if j in list(h2) and j in list(h3):
-        chung = j
+      if j in h2 and j in h3:
         break
-    if j.lower() != j:
-      kq += 26
-    kq += ord(j.lower())-96
+    if j.isupper():
+      kq += ord(j.lower())-70
+    else:
+      kq += ord(j.lower())-96
   return kq

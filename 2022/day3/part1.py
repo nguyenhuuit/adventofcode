@@ -2,14 +2,14 @@ def solution(input):
   kq = 0
   chuoi = input.split("\n")
   for i in chuoi:
-    d = i[:len(i)//2]
-    c = i[len(i)//2:]
-    chung = ""
+    l = len(i)//2
+    d = i[:l]
+    c = set(i[l:])
     for j in d:
-      if j in list(c):
-        chung = j
+      if j in c:
         break
-    if j.lower() != j:
-      kq += 26
-    kq += ord(j.lower())-96
+    if j.isupper():
+      kq += ord(j.lower())-70
+    else:
+      kq += ord(j.lower())-96
   return kq
