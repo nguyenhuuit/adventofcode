@@ -12,9 +12,11 @@
     "axios": "^1.4.0",
     "chalk": "^4.1.2",
     "chokidar": "^3.5.3",
+    "cli-spinners": "^2.9.0",
     "commander": "^11.0.0",
     "dotenv": "^16.3.1",
-    "enquirer": "^2.3.6"
+    "enquirer": "^2.3.6",
+    "ora": "^6.3.1"
   },
   "devDependencies": {
     "eslint": "^8.44.0"
