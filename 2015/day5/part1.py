@@ -23,5 +23,4 @@ def solution(input):
   for j in chuoi:
     if kiemtra(j):
       kq += 1
-    print(kiemtra(j))
   return kq
