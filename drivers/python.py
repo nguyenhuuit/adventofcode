@@ -17,6 +17,6 @@ with open(os.path.abspath(input_file)) as inp:
   rs = solution(input_text)
   end_time = time.perf_counter_ns()
   execution_time = (end_time - start_time)/1000000
-  print("{:.3f}ms".format(execution_time))
   print(rs);
+  print("{:.3f}ms".format(execution_time))
 

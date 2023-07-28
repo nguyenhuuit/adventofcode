@@ -25,3 +25,10 @@ npm run start -- -d 1 -p 1 -y 2019 -l python
 * **2** : solve part 2
 * **c** : clear terminal
 * **q** : quit program
+
+## Supported languages
+> Need an installed runtime!
+* Javascript
+* Python
+* Java
+* Golang

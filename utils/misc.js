@@ -9,8 +9,13 @@ const getSolutionFile = (state) => {
   }
   const file = `./${state.year}/day${state.day}/part${state.part}.${EXTENSIONS[state.language]}`;
   if (!fs.existsSync(file)) {
+    const template = TEMPLATES[state.language];
     if (TEMPLATES[state.language]) {
-      fs.writeFileSync(file, TEMPLATES[state.language], { flag: 'as+' });
+      if (typeof template === 'function') {
+        fs.writeFileSync(file, TEMPLATES[state.language](state), { flag: 'as+' });
+      } else {
+        fs.writeFileSync(file, TEMPLATES[state.language], { flag: 'as+' });
+      }
     }
   }
   return file;

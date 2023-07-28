@@ -1,7 +1,8 @@
 const EXTENSIONS = {
   javascript: 'js',
   python: 'py',
-  java: 'java'
+  java: 'java',
+  go: 'go'
 };
 
 const PYTHON_TEMPLATE =
@@ -38,10 +39,19 @@ class Solution {
   }
 }`;
 
+const GO_TEMPLATE = state => (
+  `package main
+
+func Part${state.part}(input string) interface{} {
+	return nil
+}
+`);
+
 const TEMPLATES = {
   javascript: JAVASCRIPT_TEMPLATE,
   python: PYTHON_TEMPLATE,
-  java: JAVA_TEMPLATE
+  java: JAVA_TEMPLATE,
+  go: GO_TEMPLATE
 };
 
 module.exports = {

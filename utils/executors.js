@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+const { exec, execSync } = require('child_process');
 const fs = require('fs');
 const chalk = require('chalk');
 const { getInputFile, getSolutionFile } = require('./misc');
@@ -9,6 +9,7 @@ const execute = async (state) => {
   case 'javascript': executeJavascript(state); break;
   case 'python': executePython(state); break;
   case 'java': executeJava(state); break;
+  case 'go': executeGolang(state); break;
   default: throw Error('Unknown language');
   }
 };
@@ -37,7 +38,7 @@ const executeJava = async (state) => {
 const executePython = async (state) => {
   getSolutionFile(state);
   getInputFile(state);
-  exec(`python3 drivers/python.py ${state.part} ${state.input} ${state.year} ${state.day}`,
+  exec(`python drivers/python.py ${state.part} ${state.input} ${state.year} ${state.day}`,
     { cwd: '.' },
     (error, stdout, stderr) => {
       if (error) {
@@ -47,8 +48,8 @@ const executePython = async (state) => {
       }
       const lines = stdout.trim().split(/\n/);
       log(lines.slice(0,lines.length -2).join('\n'));
-      const perfLog = lines[lines.length - 2];
-      state.answer = lines.last();
+      state.answer = lines[lines.length - 2];
+      const perfLog = lines.last();
       log(icon('🚀'), chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${perfLog}`);
     },
   );
@@ -70,6 +71,32 @@ const executeJavascript = async (state) => {
     state.answer = undefined;
     log(icon('⛔️'), err);
   }
+};
+
+const executeGolang = async (state) => {
+  const solutionFile = getSolutionFile(state);
+  const inputFile = await getInputFile(state);
+  try {
+    execSync(`go build -buildmode=plugin -o drivers/golang.so ${solutionFile}`);
+  } catch (err) {
+    log(icon('⛔️'), err);
+    return;
+  }
+  exec(`go run drivers/golang.go ${inputFile} ${state.part}`,
+    { cwd: '.' },
+    (error, stdout, stderr) => {
+      if (error) {
+        log(stdout);
+        log(icon('⛔️'), stderr);
+        return;
+      }
+      const lines = stdout.trim().split(/\n/);
+      log(lines.slice(0,lines.length -2).join('\n'));
+      state.answer = lines[lines.length - 2];
+      const perfLog = lines.last();
+      log(icon('🚀'), chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${perfLog}`);
+    },
+  );
 };
 
 module.exports = {

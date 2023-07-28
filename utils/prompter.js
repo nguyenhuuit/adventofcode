@@ -7,6 +7,8 @@ const LANGUAGE_MAP = {
   javascript: 'javascript',
   Java: 'java',
   java: 'java',
+  go: 'go',
+  golang: 'go',
   'C++': 'app'
 };
 
