@@ -5,5 +5,5 @@ def solution(input):
     s = sum(map(int, i.split("\n")))
     ds.append(s)
   ds.sort(reverse=True)
-  kq = sum(ds[:2])
+  kq = sum(ds[:3])
   return kq

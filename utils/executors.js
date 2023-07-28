@@ -37,20 +37,19 @@ const executeJava = async (state) => {
 const executePython = async (state) => {
   getSolutionFile(state);
   getInputFile(state);
-  const before = performance.now();
-  exec(`python -B -c 'from part${state.part} import solution\nwith open("${state.input}.txt") as inp: print(solution(inp.read().strip()));'`,
-    { cwd: `./${state.year}/day${state.day}/` },
+  exec(`python3 drivers/python.py ${state.part} ${state.input} ${state.year} ${state.day}`,
+    { cwd: '.' },
     (error, stdout, stderr) => {
       if (error) {
         log(stdout);
         log(icon('⛔️'), stderr);
         return;
       }
-      const after = performance.now();
       const lines = stdout.trim().split(/\n/);
-      log(lines.slice(0,lines.length -1).join('\n'));
+      log(lines.slice(0,lines.length -2).join('\n'));
+      const perfLog = lines[lines.length - 2];
       state.answer = lines.last();
-      log(icon('🚀'), chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${(after-before).toFixed(2)}ms`);
+      log(icon('🚀'), chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${perfLog}`);
     },
   );
 };
@@ -65,7 +64,8 @@ const executeJavascript = async (state) => {
     const before = performance.now();
     state.answer = solution(input, isSample);
     const after = performance.now();
-    log(icon('🚀'), chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${(after-before).toFixed(2)}ms`);
+    log();
+    log(icon('🚀'), chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${(after-before).toFixed(3)}ms`);
   } catch (err) {
     state.answer = undefined;
     log(icon('⛔️'), err);

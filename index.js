@@ -40,6 +40,9 @@ const start = async () => {
   });
   process.stdin.setRawMode(true);
   process.stdin.on('data', data => {
+    if (data == '\u0003'  /* Ctrl C */) {
+      process.exit();
+    }
     const cmd = data.toString().trim();
     if (!process.stdin.isRaw) {
       process.stdout.moveCursor(0, -1);
@@ -48,8 +51,16 @@ const start = async () => {
     } else {
       log();
     }
+    if (data == '\u000d' /* Enter */) {
+      process.stdout.moveCursor(0, -1);
+      if (state.language === 'javascript') {
+        delete require.cache[require.resolve(getSolutionFile(state))];
+      }
+      execute(state);
+      return;
+    }
     switch (cmd) {
-    case 'rp':
+    case 'r':
     case 'repeat': {
       if (state.language === 'javascript') {
         delete require.cache[require.resolve(getSolutionFile(state))];
