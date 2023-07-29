@@ -20,7 +20,7 @@ class State:
       ds.append(str(pointer))
       pointer = pointer.prev
     ds.reverse()
-    print(len(ds)-1,"Buoc")
+    print(f"({len(ds)-1} buoc)")
     print("\n".join(ds))
 
 def tao(s,ds):
@@ -64,7 +64,7 @@ def solution(input):
     if len(queue) == 0:
       break
   for i in range(len(kq)):
-    print("Cach " + str(i+1))
+    print("Cach", str(i+1), end=' ')
     kq[i].print()
     print()
       

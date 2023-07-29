@@ -1,6 +1,8 @@
 const fs = require('node:fs');
 const { getSample, getInput } = require('./api');
 const { TEMPLATES, EXTENSIONS } = require('./languages');
+const { icon } = require('./formatter');
+const chalk = require('chalk');
 
 const getSolutionFile = (state) => {
   const dir = `./${state.year}/day${state.day}/`;
@@ -21,6 +23,8 @@ const getSolutionFile = (state) => {
   return file;
 };
 
+const VALID_YEARS = ['2015','2016','2017','2018','2019','2020','2021','2022'];
+
 const getInputFile = async (state) => {
   const dir = `./${state.year}/day${state.day}/`;
   if (!fs.existsSync(dir)) {
@@ -29,10 +33,19 @@ const getInputFile = async (state) => {
   const file = `./${state.year}/day${state.day}/${state.input}.txt`;
   if (!fs.existsSync(file)) {
     let data = '';
-    if (state.input === 'sample') {
-      data = await getSample(state.day, state.year);
-    } else if (state.input === 'input') {
-      data = await getInput(state.day, state.year);
+    if (VALID_YEARS.includes(state.year)) {
+      try {
+        if (state.input === 'sample') {
+          data = await getSample(state.day, state.year);
+        } else if (state.input === 'input') {
+          data = await getInput(state.day, state.year);
+        }
+      } catch (err) {
+        log(`\n${icon('⛔️')}`, chalk.red(`Cannot get the problem: ${err}`));
+      }
+      
+    } else {
+      log(`\n${icon('ℹ️')}`, chalk.yellow(`Topic: ${state.year}`));
     }
     data = data || '';
     fs.writeFileSync(file, data, { flag: 'as+' });
