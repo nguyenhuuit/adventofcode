@@ -38,7 +38,7 @@ const executeJava = async (state) => {
 const executePython = async (state) => {
   getSolutionFile(state);
   getInputFile(state);
-  exec(`python drivers/python.py ${state.part} ${state.input} ${state.year} ${state.day}`,
+  exec(`python3 drivers/python.py ${state.part} ${state.input} ${state.year} ${state.day}`,
     { cwd: '.' },
     (error, stdout, stderr) => {
       if (error) {
