@@ -1,6 +1,6 @@
-const { Select, Input } = require('enquirer');
+import inquirer from "enquirer";
 
-const LANGUAGE_MAP = {
+export const LANGUAGE_MAP: any = {
   Python: 'python',
   python: 'python',
   Javascript: 'javascript',
@@ -13,10 +13,11 @@ const LANGUAGE_MAP = {
 };
 
 
-const validate = async (opts) => {
+export const validate = async (opts: any) => {
   let { year, day, part, language } = opts;
   if (!language) {
-    const promptLanguage = new Select({
+    language = await inquirer.prompt({
+      type: "select",
       name: 'language',
       message: 'Select programming language',
       choices: [
@@ -26,32 +27,24 @@ const validate = async (opts) => {
         { name: 'C++' },
       ]
     });
-       
-    language = await promptLanguage.run();
-    log();
   }
   if (!year) {
-    const promptYear = new Input({
+    year = await inquirer.prompt({
+      type: 'input',
       name: 'year',
       message: 'Select year',
     });
-       
-    const answer = await promptYear.run();
-    year = answer;
-    log();
   }
   if (!day) {
-    const promptDay = new Input({
+    day = inquirer.prompt({
+      type: 'input',
       name: 'day',
       message: 'Select day',
     });
-       
-    const answer = await promptDay.run();
-    day = answer;
-    log();
   }
   if (!part) {
-    const promptPart = new Select({
+    part = await inquirer.prompt({
+      type: 'select',
       name: 'part',
       message: 'Select part',
       choices: [
@@ -60,14 +53,7 @@ const validate = async (opts) => {
       ]
     });
        
-    part = await promptPart.run() === 'Part 1' ? 1 : 2;
-    log();
+    part = await part === 'Part 1' ? 1 : 2;
   }
-  process.stdin.resume();
   return { year, day, part, language };
-};
-
-module.exports = {
-  validate,
-  LANGUAGE_MAP,
 };

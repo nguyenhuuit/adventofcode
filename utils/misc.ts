@@ -1,10 +1,7 @@
-const fs = require('node:fs');
-const { getSample, getInput } = require('./api');
-const { TEMPLATES, EXTENSIONS } = require('./languages');
-const { icon } = require('./formatter');
-const chalk = require('chalk');
+import fs from 'node:fs';
+import { TEMPLATES, EXTENSIONS } from './languages.js';
 
-const getSolutionFile = (state) => {
+export const getSolutionFile = (state: any) => {
   const dir = `./${state.year}/day${state.day}/`;
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -25,7 +22,7 @@ const getSolutionFile = (state) => {
 
 const VALID_YEARS = ['2015','2016','2017','2018','2019','2020','2021','2022'];
 
-const getInputFile = async (state) => {
+export const getInputFile = async (state: any) => {
   const dir = `./${state.year}/day${state.day}/`;
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -33,27 +30,22 @@ const getInputFile = async (state) => {
   const file = `./${state.year}/day${state.day}/${state.input}.txt`;
   if (!fs.existsSync(file)) {
     let data = '';
-    if (VALID_YEARS.includes(state.year)) {
-      try {
-        if (state.input === 'sample') {
-          data = await getSample(state.day, state.year);
-        } else if (state.input === 'input') {
-          data = await getInput(state.day, state.year);
-        }
-      } catch (err) {
-        log(`\n${icon('⛔️')}`, chalk.red(`Cannot get the problem: ${err}`));
-      }
+    // if (VALID_YEARS.includes(state.year)) {
+    //   try {
+    //     if (state.input === 'sample') {
+    //       data = await getSample(state.day, state.year);
+    //     } else if (state.input === 'input') {
+    //       data = await getInput(state.day, state.year);
+    //     }
+    //   } catch (err) {
+    //     // log(`\n${icon('⛔️')}`, chalk.red(`Cannot get the problem: ${err}`));
+    //   }
       
-    } else {
-      log(`\n${icon('ℹ️')}`, chalk.yellow(`Topic: ${state.year}`));
-    }
+    // } else {
+    //   // log(`\n${icon('ℹ️')}`, chalk.yellow(`Topic: ${state.year}`));
+    // }
     data = data || '';
     fs.writeFileSync(file, data, { flag: 'as+' });
   }
   return file;
-};
-
-module.exports = {
-  getInputFile,
-  getSolutionFile
 };
