@@ -1,6 +1,14 @@
-import { exec, execSync } from 'child_process';
+import { exec, execSync, ChildProcess } from 'child_process';
 import fs from 'fs';
 import { getInputFile, getSolutionFile } from './misc.js';
+
+let childProcess: ChildProcess;
+
+export const terminate = () => {
+  if (childProcess && childProcess instanceof ChildProcess && !childProcess.killed) {
+    childProcess.kill('SIGKILL')
+  }
+}
 
 export const execute = async (state: any): Promise<any> => {
   switch (state.language) {
@@ -44,19 +52,11 @@ const executeJava = async (state: any) => {
 const executePython = async (state: any) => {
   getSolutionFile(state);
   getInputFile(state);
-  return new Promise((resolve, reject) => {
-    exec(`python3 drivers/python.py ${state.part} ${state.input} ${state.year} ${state.day}`,
+  return new Promise((resolve) => {
+    childProcess = exec(`python3 drivers/python.py ${state.part} ${state.input} ${state.year} ${state.day}`,
       { cwd: '.' },
       (error, stdout, stderr) => {
-        if (error) {
-          return reject(stderr)
-        }
-        const lines = stdout.trim().split(/\n/);
-        // log(lines.slice(0,lines.length -2).join('\n'));
-        const answer = lines[lines.length - 2];
-        const perfLog = lines[lines.length - 1];
-        resolve(answer)
-        // log(icon('🚀'), chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${perfLog}`);
+        resolve({ stdout, stderr, error })
       },
     );
   })

@@ -13,17 +13,20 @@ function Spinner({type = 'dots', loading = false}: Props) {
 	const spinner = spinners[type];
 
 	useEffect(() => {
-		const timer = setInterval(() => {
-			setFrame(previousFrame => {
-				const isLastFrame = previousFrame === spinner.frames.length - 1;
-				return isLastFrame ? 0 : previousFrame + 1;
-			});
-		}, spinner.interval);
-
-		return () => {
-			clearInterval(timer);
-		};
-	}, [spinner]);
+		if (loading) {
+			const timer = setInterval(() => {
+				setFrame(previousFrame => {
+					const isLastFrame = previousFrame === spinner.frames.length - 1;
+					return isLastFrame ? 0 : previousFrame + 1;
+				});
+			}, spinner.interval);
+	
+			return () => {
+				clearInterval(timer);
+			};
+		}
+		return () => {}
+	}, [spinner, loading]);
 
 	return loading ? <Text>{spinner.frames[frame]}</Text> : <Text>{spinner.frames[0]}</Text>;
 }
