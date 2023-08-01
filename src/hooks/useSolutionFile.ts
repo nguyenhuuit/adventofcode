@@ -1,9 +1,11 @@
 import fs from 'fs'
 import { EXTENSIONS, TEMPLATES } from '../../utils/languages.js'
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
-export const useSolutionFile = (year: string, day: string, part: string, language: string): string => {
-  const solutionFile = useMemo<string>((): string => {
+export const useSolutionFile = (year: string, day: string, part: string, language: string, ts: number) => {
+  const [name, setName] = useState('')
+  const [size, setSize] = useState(0)
+  useEffect(() => {
     const dir = `./${year}/day${day}/`;
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -19,7 +21,9 @@ export const useSolutionFile = (year: string, day: string, part: string, languag
         }
       }
     }
-    return file
-  }, [year, day, part, language]);
-  return solutionFile;
+    const stats = fs.statSync(file)
+    setName(file)
+    setSize(stats.size);
+  }, [year, day, part, language, ts]);
+  return { name, size };
 }

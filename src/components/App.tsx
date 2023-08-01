@@ -1,16 +1,20 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Text, useApp, useInput } from 'ink';
 import chokidar from 'chokidar';
+import chalk from 'chalk';
 import Spinner from './Spinner.js';
 import { useSolutionFile } from '../hooks/useSolutionFile.js';
 import { useInputFile } from '../hooks/useInputFile.js';
 import { execute, terminate } from '../../utils/executors.js'
 import { HELP_MESSAGE } from './constants.js';
+import { useYearInfo } from '../hooks/useYearInfo.js';
 
 const watcher = chokidar.watch([])
 
 const App = ({ state }: any) => {
 	const {exit} = useApp();
+
+	const { userName, star } = useYearInfo(state.year, 0)
 
 	const [inputMode, setInputMode] = useState(state.input)
 	const [part, setPart] = useState(state.part)
@@ -19,8 +23,10 @@ const App = ({ state }: any) => {
 	const [perfLog, setPerfLog] = useState('');
 	const [loading, setLoading] = useState(false);
 
-	const solutionFile = useSolutionFile(state.year, state.day, part, state.language);
-	const inputFile = useInputFile(state.year, state.day, inputMode);
+	const [tsSolutionFile, setTsSolutionFile] = useState(0)
+	const { name: solutionFileName, size: solutionFileSize } = useSolutionFile(state.year, state.day, part, state.language, tsSolutionFile);
+	const [tsInputFile, setTsInputFile] = useState(0)
+	const { name: inputFileName, size: inputFileSize } = useInputFile(state.year, state.day, inputMode, tsInputFile);
 
 	const executeSolution = async (s: any) => {
 		setLoading(true)
@@ -44,31 +50,35 @@ const App = ({ state }: any) => {
 	}
 
 	useEffect(() => {
-		watcher.add(solutionFile);
+		if (!solutionFileName) return;
+		watcher.add(solutionFileName);
 		watcher.on('change', async () => {
 			if (state.language === 'javascript') {
-				delete require.cache[require.resolve(solutionFile)];
+				delete require.cache[require.resolve(solutionFileName)];
 			}
 			const s = { year: state.year, day: state.day, part, input: inputMode, language: state.language }
+			setTsSolutionFile(s => s + 1)
 			await executeSolution(s)
 		});
 		return () => {
-			watcher.unwatch(solutionFile)
+			watcher.unwatch(solutionFileName)
 		}
-	}, [solutionFile])
+	}, [solutionFileName])
 	useEffect(() => {
-		watcher.add(inputFile);
+		if (!inputFileName) return;
+		watcher.add(inputFileName);
 		watcher.on('change', async () => {
 			if (state.language === 'javascript') {
-				delete require.cache[require.resolve(solutionFile)];
+				delete require.cache[require.resolve(solutionFileName)];
 			}
 			const s = { year: state.year, day: state.day, part, input: inputMode, language: state.language }
+			setTsInputFile(s => s + 1)
 			await executeSolution(s)
 		});
 		return () => {
-			watcher.unwatch(inputFile)
+			watcher.unwatch(inputFileName)
 		}
-	}, [inputFile])
+	}, [inputFileName])
 
 	useInput(async (input, key) => {
 		switch (input) {
@@ -139,16 +149,19 @@ const App = ({ state }: any) => {
 				<Text italic bold color={"#FF8800"}> {part} </Text>
 				<Text>Language:</Text>
 				<Text italic bold color={"#FF8800"}> {state.language} </Text>
+				{userName && (
+					<>
+						<Text>Username:</Text>
+						<Text italic bold color={"#FF8800"}> {userName} </Text>
+					</>
+				)}
+				{star && <Text italic bold color={"#FF8800"}>{star}⭐️ </Text>}
 			</Box>
 			<Box height={1}/>
 			<Box width={100}>
-				<Box flexDirection="column" width={30}>
-					<Text>{`👁️  ${solutionFile}`}</Text>
-					<Text>{`👁️  ${inputFile}`}</Text>
-				</Box>
 				<Box flexDirection="column" width={50}>
-					<Text>{`${ inputMode === 'sample' ? '👉' : '  '} ${state.year}/day${state.day}/sample.txt`}</Text>
-					<Text>{`${ inputMode === 'input' ? '👉' : '  '} ${state.year}/day${state.day}/input.txt`}</Text>
+					<Text>{`Solution file: ${chalk.bold(chalk.magentaBright(solutionFileName.slice(2)))} ${solutionFileSize} bytes`}</Text>
+					<Text>{`   Input file: ${chalk.bold(chalk.magentaBright(inputFileName.slice(2)))} ${inputFileSize} bytes`}</Text>
 				</Box>
 			</Box>
 			<Box height={1}/>

@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import { render } from 'ink';
 import { program, Option } from 'commander';
 
@@ -5,6 +6,7 @@ import { validate, LANGUAGE_MAP } from '../utils/prompter.js';
 import App from './components/App.js'
 import React from 'react';
 
+dotenv.config()
 console.clear()
 
 program
