@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import axios from 'axios';
+import { HOST, VALID_YEARS } from "../constants.js";
 
-const HOST = 'https://adventofcode.com';
 const REGEX_USERNAME = /class="user">(.+?) ?</;
 const REGEX_STAR = /class="star-count">(.+?)\*</;
 
@@ -14,7 +14,7 @@ export const useYearInfo = (year: string, ts: number) => {
       setUserName('')
       return
     }
-    const url = `${HOST}/${year}`;
+    const url = VALID_YEARS.includes(year) ? `${HOST}/${year}` : `${HOST}`;
     axios({
       method: 'GET',
       url,

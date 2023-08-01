@@ -1,9 +1,10 @@
 import axios from 'axios';
 import fs from 'fs';
 import { useEffect, useState } from "react";
+import { HOST, VALID_YEARS } from '../constants.js';
 
-const HOST = 'https://adventofcode.com';
 const SAMPLE_REGEX = /\(your puzzle input\)[\s\S]*?<code>([\s\S]+?)<\/code>/;
+
 const decode = (str: string) => {
   return str
     .replaceAll('&gt;', '>')
@@ -26,6 +27,9 @@ export const useInputFile = (year: string, day: string, inp: string, ts: number)
     const stats = fs.statSync(file)
     setName(file);
     setSize(stats.size);
+    if (!VALID_YEARS.includes(year)) {
+      return;
+    }
     if (stats.size === 0 && inp === 'input' && process.env['SESSION']) {
       const url = `${HOST}/${year}/day/${day}/input`;
       axios({
