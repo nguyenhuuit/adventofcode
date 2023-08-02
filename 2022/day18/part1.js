@@ -7,7 +7,7 @@ const getAdjacents = ([x,y,z]) => [
   [x, y, z-1]
 ];
 
-const solution = input => {
+export const solution = input => {
   const lines = input.split(/\n/)
   const cubeSet = new Set();
   const cubes = lines.map(l => { cubeSet.add(l); return l.split(',').map(int); });
@@ -20,4 +20,3 @@ const solution = input => {
   return sum;
 }
 
-module.exports = solution;

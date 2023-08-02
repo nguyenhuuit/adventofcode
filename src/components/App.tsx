@@ -74,9 +74,6 @@ const App = ({ state }: any) => {
 		if (!solutionFileName) return;
 		watcher.add(solutionFileName);
 		watcher.on('change', async () => {
-			if (state.language === 'javascript') {
-				delete require.cache[require.resolve(solutionFileName)];
-			}
 			const s = { year: state.year, day: state.day, part, input: inputMode, language: state.language }
 			setTsSolutionFile(s => s + 1)
 			await executeSolution(s)
@@ -89,9 +86,6 @@ const App = ({ state }: any) => {
 		if (!inputFileName) return;
 		watcher.add(inputFileName);
 		watcher.on('change', async () => {
-			if (state.language === 'javascript') {
-				delete require.cache[require.resolve(solutionFileName)];
-			}
 			const s = { year: state.year, day: state.day, part, input: inputMode, language: state.language }
 			setTsInputFile(s => s + 1)
 			await executeSolution(s)
@@ -103,7 +97,10 @@ const App = ({ state }: any) => {
 
 	useInput(async (input, key) => {
 		switch (input) {
-			case 'q': exit(); break;
+			case 'q': {
+				exit();
+				process.exit();
+			}
 			case 'i': {
 				setInputMode("input");
 				const s = { year: state.year, day: state.day, part, input: 'input', language: state.language }

@@ -49,11 +49,9 @@ const executeJava = async (state: any) => {
   );
 };
   
-const executePython = async (state: any) => {
-  getSolutionFile(state);
-  getInputFile(state);
+const executePython = (state: any) => {
   return new Promise((resolve) => {
-    childProcess = exec(`python3 drivers/python.py ${state.part} ${state.input} ${state.year} ${state.day}`,
+    childProcess = exec(`python3 drivers/python.py ${state.year} ${state.day} ${state.part} ${state.input}`,
       { cwd: '.' },
       (error, stdout, stderr) => {
         resolve({ stdout, stderr, error })
@@ -62,46 +60,32 @@ const executePython = async (state: any) => {
   })
 };
   
-const executeJavascript = async (state: any) => {
-  const solutionFile = getSolutionFile(state);
-  const inputFile = await getInputFile(state);
-  try {
-    const solution = require(`.${solutionFile}`);
-    const isSample = state.input === 'sample';
-    const input = fs.readFileSync(inputFile, 'utf8');
-    const before = performance.now();
-    state.answer = solution(input, isSample);
-    const after = performance.now();
-    // log();
-    // log(icon('🚀'), chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${(after-before).toFixed(3)}ms`);
-  } catch (err) {
-    state.answer = undefined;
-    // log(icon('⛔️'), err);
-  }
+const executeJavascript = (state: any) => {
+  return new Promise((resolve) => {
+    childProcess = exec(`node drivers/javascript.js ${state.year} ${state.day} ${state.part} ${state.input}`,
+      { cwd: '.' },
+      (error, stdout, stderr) => {
+        resolve({ stdout, stderr, error })
+      },
+    );
+  })
 };
 
-const executeGolang = async (state: any) => {
+const executeGolang = (state: any) => {
   const solutionFile = getSolutionFile(state);
-  const inputFile = await getInputFile(state);
+  const inputFile = getInputFile(state);
   try {
     execSync(`go build -buildmode=plugin -o drivers/golang.so ${solutionFile}`);
   } catch (err) {
     // log(icon('⛔️'), err);
     return;
   }
-  exec(`go run drivers/golang.go ${inputFile} ${state.part}`,
-    { cwd: '.' },
-    (error, stdout, stderr) => {
-      if (error) {
-        // log(stdout);
-        // log(icon('⛔️'), stderr);
-        return;
-      }
-      const lines = stdout.trim().split(/\n/);
-      // log(lines.slice(0,lines.length -2).join('\n'));
-      state.answer = lines[lines.length - 2];
-      const perfLog = lines[lines.length - 1];
-      // log(icon('🚀'), chalk.bold(chalk.greenBright(state.answer)), ` ⏱ ${perfLog}`);
-    },
-  );
+  return new Promise((resolve) => {
+    childProcess = exec(`go run drivers/golang.go ${inputFile} ${state.part}`,
+      { cwd: '.' },
+      (error, stdout, stderr) => {
+        resolve({ stdout, stderr, error })
+      },
+    );
+  });
 };

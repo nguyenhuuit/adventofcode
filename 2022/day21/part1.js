@@ -1,4 +1,4 @@
-const solution = input => {
+export const solution = input => {
   const monkeys = input
     .split(/\n/)
     .map(line => line.split(': '))

@@ -19,7 +19,7 @@ const find = (v, arr, fromTail) => {
   return rs;
 };
 
-const solution = (input) => {
+export const solution = (input) => {
   const rows = input
     .split(/\n/)
     .map((p) => p.split("").map(int));
@@ -50,4 +50,3 @@ const solution = (input) => {
   return max;
 };
 
-module.exports = solution;

@@ -98,7 +98,7 @@ addCache = (chamber, rockIndex, patternIndex, chamberLength, rockStopped) => {
 
 const GOAL = 1000000000000;
 
-const solution = input => {
+export const solution = input => {
   const jetPattern = input.split("");
   let patternIndex = 0;
   const chamber = []
@@ -141,4 +141,3 @@ const solution = input => {
   }
 }
 
-module.exports = solution;

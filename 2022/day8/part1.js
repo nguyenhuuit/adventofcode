@@ -1,4 +1,4 @@
-const solution = (input) => {
+export const solution = (input) => {
   const rows = input
     .split(/\n/)
     .map((p) => p.split("").map(int));
@@ -29,4 +29,3 @@ const solution = (input) => {
   return visible;
 };
 
-module.exports = solution;

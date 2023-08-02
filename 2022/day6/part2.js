@@ -1,4 +1,4 @@
-const solution = (input) => {
+export const solution = (input) => {
   let queue = [];
   let i = 0;
   while (queue.length < 4) {
@@ -23,4 +23,3 @@ const solution = (input) => {
   return i;
 };
 
-module.exports = solution;

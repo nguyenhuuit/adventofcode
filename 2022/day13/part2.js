@@ -15,7 +15,7 @@ const compare = (a,b) => {
   }
 }
 
-const solution = (input) => {
+export const solution = (input) => {
   return input
     .split(/\n\n/)
     .map((line) => line.split("\n")
@@ -30,4 +30,3 @@ const solution = (input) => {
     .reduce((acc, v) => acc*v.i, 1)
 }
 
-module.exports = solution;

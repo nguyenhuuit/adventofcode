@@ -11,10 +11,9 @@ const PYTHON_TEMPLATE =
 `;
 
 const JAVASCRIPT_TEMPLATE =
-`const solution = input => {
+`export const solution = input => {
   return null;
 }
-module.exports = solution;
 `;
 
 const JAVA_TEMPLATE =

@@ -1,4 +1,4 @@
-const solution = input => {
+export const solution = input => {
   const valves = input
     .split(/\n/)
     .map(l => {
@@ -38,4 +38,3 @@ const solution = input => {
   return DFS('AA', [], 30);
 }
 
-module.exports = solution;

@@ -1,6 +1,6 @@
 const MAP = ['=', '-', '0', '1', '2'];
 
-const solution = input => {
+export const solution = input => {
   const sum = input
     .split(/\n/)
     .map(line => line.split("").map(ch => MAP.indexOf(ch)).join(""))
@@ -14,4 +14,3 @@ const solution = input => {
   return sumInBase5;
 }
 
-module.exports = solution;

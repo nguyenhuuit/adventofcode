@@ -50,4 +50,3 @@ const solution = (input, isSample) => {
     }, 0);
 }
 
-module.exports = solution;

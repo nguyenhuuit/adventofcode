@@ -27,11 +27,10 @@ const m = {
     Z: resultPoints.Z + shapePoints.A,
   },
 };
-const solution = (input) => {
+export const solution = (input) => {
   return input
     .split(/\n/)
     .map((p) => m[p.charAt(0)][p.charAt(2)])
     .sum();
 };
 
-module.exports = solution;

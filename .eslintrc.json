@@ -13,7 +13,7 @@
     "process": "readonly",
     "log": "readonly"
   },
-  "ignorePatterns": ["part1.js", "part2.js"],
+  "ignorePatterns": ["part1.js", "part2.js", "javascript.js"],
   "rules": {
     "indent": [
       "error",

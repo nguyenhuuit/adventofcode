@@ -1,4 +1,4 @@
-const solution = (input) => {
+export const solution = (input) => {
   const nodes = input.split(/\n/).map((line) => line.split(""));
 
   let endX;
@@ -56,4 +56,3 @@ const solution = (input) => {
   return min;
 };
 
-module.exports = solution;

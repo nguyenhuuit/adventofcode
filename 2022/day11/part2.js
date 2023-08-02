@@ -22,7 +22,7 @@ const parseMonkey = (inp) => {
   return monkey;
 };
 
-const solution = (input) => {
+export const solution = (input) => {
   const monkeys = input.split(/\n\n/).map(parseMonkey);
 
   const lcm = monkeys.map((m) => m.test).mul();
@@ -50,4 +50,3 @@ const solution = (input) => {
     .mul();
 };
 
-module.exports = solution;

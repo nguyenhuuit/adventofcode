@@ -1,4 +1,4 @@
-const solution = input => {
+export const solution = input => {
   return input
     .split(/\n/)
     .map(p => p.split(/[-,]/).map(int))
@@ -6,4 +6,3 @@ const solution = input => {
     .length
 }
 
-module.exports = solution;

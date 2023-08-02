@@ -1,4 +1,4 @@
-const solution = (input) => {
+export const solution = (input) => {
   return input
     .split(/\n\n/)
     .map(p => p.split(/\n/).map(int).sum())
@@ -6,5 +6,3 @@ const solution = (input) => {
     .slice(0,3)
     .sum();
 };
-
-module.exports = solution;

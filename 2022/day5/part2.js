@@ -1,4 +1,4 @@
-const solution = (input) => {
+export const solution = (input) => {
   const lines = input.split(/\n/);
   const queues = [];
   for (let i = 0; i < 9; i++) {
@@ -27,4 +27,3 @@ const solution = (input) => {
   return queues.map((q) => q.pop()).join("");
 };
 
-module.exports = solution;

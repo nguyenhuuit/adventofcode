@@ -1,4 +1,4 @@
-const solution = (input) => {
+export const solution = (input) => {
   const robeLength = 10;
   const T = [];
   for (let i = 0; i < robeLength; i++) {
@@ -52,4 +52,3 @@ const solution = (input) => {
   return trace.size;
 };
 
-module.exports = solution;

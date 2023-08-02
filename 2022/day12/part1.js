@@ -1,4 +1,4 @@
-const solution = (input) => {
+export const solution = (input) => {
   const nodes = input.split(/\n/).map((line) => line.split(""));
   let startX;
   let startY;
@@ -50,4 +50,3 @@ const solution = (input) => {
   return nodes[endX][endY].depth;
 };
 
-module.exports = solution;

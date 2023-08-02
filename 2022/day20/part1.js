@@ -6,7 +6,7 @@ class Node {
   }
 }
 
-const solution = input => {
+export const solution = input => {
   const nodes = input
     .split(/\n/)
     .map(int)

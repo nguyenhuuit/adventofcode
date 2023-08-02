@@ -1,4 +1,4 @@
-const solution = (input) => {
+export const solution = (input) => {
   const lines = input.split(/\n/);
   const sizes = {};
   const path = [];
@@ -44,4 +44,3 @@ const solution = (input) => {
   return ans;
 };
 
-module.exports = solution;

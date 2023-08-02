@@ -1,4 +1,4 @@
-const solution = (input) => {
+export const solution = (input) => {
   const H = { x: 0, y: 0 };
   const T = { x: 0, y: 0 };
 
@@ -33,4 +33,3 @@ const solution = (input) => {
   return trace.size;
 };
 
-module.exports = solution;

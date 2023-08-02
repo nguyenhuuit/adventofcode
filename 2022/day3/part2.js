@@ -1,5 +1,5 @@
 const toInt = chr => chr.charCodeAt(0) - ((chr >= 'a' && chr <= 'z') ? 96 : 38);
-const solution = input => input
+export const solution = input => input
   .split(/\n/)
   .reduce((acc, line, idx) => {
     const n = Math.floor(idx/3)
@@ -26,4 +26,3 @@ const solution = input => input
   .map(toInt)
   .sum();
 
-module.exports = solution;

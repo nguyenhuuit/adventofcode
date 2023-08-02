@@ -54,7 +54,7 @@ const move = (g, world, pos) => {
     }
   }
 }
-const solution = input => {
+export const solution = input => {
   const [w, g] = input.split(/\n\n/);
   const world = parseWorld(w);
   const guide = parseGuide(g);
@@ -69,4 +69,3 @@ const solution = input => {
   return 1000*(pos.y+1) + 4*(pos.x + 1) + pos.d;
 }
 
-module.exports = solution;

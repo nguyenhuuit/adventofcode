@@ -8,7 +8,7 @@ class Node {
 
 const KEY = 811589153;
 
-const solution = input => {
+export const solution = input => {
   const nodes = input
     .split(/\n/)
     .map(int)

@@ -21,7 +21,7 @@ const parseMonkey = (inp) => {
   monkey.iffalse = int(m5[1]);
   return monkey;
 };
-const solution = (input) => {
+export const solution = (input) => {
   const monkeys = input.split(/\n\n/).map(parseMonkey);
 
   for (let round = 0; round < 20; round++) {
@@ -45,4 +45,3 @@ const solution = (input) => {
     .slice(0, 2)
     .mul();
 };
-module.exports = solution;

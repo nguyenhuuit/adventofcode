@@ -1,4 +1,4 @@
-const solution = (input) => {
+export const solution = (input) => {
   let cycle = 0;
   let register = 1;
   let output = "#";
@@ -29,5 +29,3 @@ const solution = (input) => {
   }
   return rs;
 };
-
-module.exports = solution;

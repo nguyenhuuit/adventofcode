@@ -1,5 +1,5 @@
 const toInt = chr => chr.charCodeAt(0) - ((chr >= 'a' && chr <= 'z') ? 96 : 38);
-const solution = input => input
+export const solution = input => input
   .split(/\n/)
   .map(line => {
     const firstSet = new Set(line.substring(0, line.length /2).split(""));
@@ -13,4 +13,3 @@ const solution = input => input
   .map(toInt)
   .sum();
 
-module.exports = solution;

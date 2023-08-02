@@ -56,7 +56,7 @@ const calcNextMove = (star, positions) => {
   star.directions = [...star.directions.slice(1), star.directions[0]];
 }
 
-const solution = input => {
+export const solution = input => {
   const stars = []
   const positions = new Set();
   input.split(/\n/).forEach((line, y) => {
@@ -105,4 +105,3 @@ const solution = input => {
   return (max(...xs) - min(...xs) + 1)*(max(...ys) - min(...ys) + 1) - stars.length;
 }
 
-module.exports = solution;
