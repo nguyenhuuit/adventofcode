@@ -29,21 +29,23 @@ export const validate = async (opts: any) => {
     });
   }
   if (!year) {
-    year = await inquirer.prompt({
+    const rs: any = await inquirer.prompt({
       type: 'input',
       name: 'year',
       message: 'Select year',
     });
+    year = rs.year
   }
   if (!day) {
-    day = inquirer.prompt({
+    const rs: any = await inquirer.prompt({
       type: 'input',
       name: 'day',
       message: 'Select day',
     });
+    day = rs.day
   }
   if (!part) {
-    part = await inquirer.prompt({
+    const rs: any = await inquirer.prompt({
       type: 'select',
       name: 'part',
       message: 'Select part',
@@ -52,8 +54,8 @@ export const validate = async (opts: any) => {
         { name: 'Part 2' },
       ]
     });
-       
-    part = await part === 'Part 1' ? 1 : 2;
+    console.log('part', part)
+    part = (rs.part === 'Part 1' ? 1 : 2);
   }
   return { year, day, part, language };
 };

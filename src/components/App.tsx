@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import Spinner from './Spinner.js';
 import { useSolutionFile } from '../hooks/useSolutionFile.js';
 import { useInputFile } from '../hooks/useInputFile.js';
-import { execute, terminate } from '../../utils/executors.js'
+import { execute, terminate } from '../utils/executors.js'
 import { HELP_MESSAGE } from './constants.js';
 import { useYearInfo } from '../hooks/useYearInfo.js';
 import { useSubmit } from '../hooks/useSubmit.js';
