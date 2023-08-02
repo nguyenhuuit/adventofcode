@@ -8,13 +8,15 @@ import { useInputFile } from '../hooks/useInputFile.js';
 import { execute, terminate } from '../../utils/executors.js'
 import { HELP_MESSAGE } from './constants.js';
 import { useYearInfo } from '../hooks/useYearInfo.js';
+import { useSubmit } from '../hooks/useSubmit.js';
 
 const watcher = chokidar.watch([])
 
 const App = ({ state }: any) => {
 	const {exit} = useApp();
 
-	const { userName, star } = useYearInfo(state.year, 0)
+	const [tsUserName, setTsUserName] = useState(0)
+	const { userName, star } = useYearInfo(state.year, tsUserName)
 
 	const [inputMode, setInputMode] = useState(state.input)
 	const [part, setPart] = useState(state.part)
@@ -27,6 +29,25 @@ const App = ({ state }: any) => {
 	const { name: solutionFileName, size: solutionFileSize } = useSolutionFile(state.year, state.day, part, state.language, tsSolutionFile);
 	const [tsInputFile, setTsInputFile] = useState(0)
 	const { name: inputFileName, size: inputFileSize } = useInputFile(state.year, state.day, inputMode, tsInputFile);
+
+	const submit = useSubmit(state.year, state.day, part, answer);
+
+	const handleSubmit = async () => {
+		setLoading(true)
+		try {
+			const { correct, waitingTime } = await submit();
+			let msg = correct ? 'Right answer!' : 'Wrong answer!'
+			if (waitingTime) {
+				msg += ` Waiting ${waitingTime}`
+			}
+			setOutput(msg)
+			setTsUserName(s => s + 1)
+		} catch (err: any) {
+			setOutput(`Cannot submit answer: ${err}`)
+		} finally {
+			setLoading(false)
+		}
+	}
 
 	const executeSolution = async (s: any) => {
 		setLoading(true)
@@ -115,6 +136,10 @@ const App = ({ state }: any) => {
 			}
 			case 'h': {
 				setOutput(HELP_MESSAGE);
+				break;
+			}
+			case 'u': {
+				handleSubmit();
 				break;
 			}
 		}
