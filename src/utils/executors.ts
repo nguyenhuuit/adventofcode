@@ -1,5 +1,4 @@
 import { exec, execSync, ChildProcess } from 'child_process';
-import fs from 'fs';
 import { getInputFile, getSolutionFile } from './misc.js';
 
 let childProcess: ChildProcess;
@@ -74,13 +73,12 @@ const executeJavascript = (state: any) => {
 const executeGolang = (state: any) => {
   const solutionFile = getSolutionFile(state);
   const inputFile = getInputFile(state);
-  try {
-    execSync(`go build -buildmode=plugin -o drivers/golang.so ${solutionFile}`);
-  } catch (err) {
-    // log(icon('⛔️'), err);
-    return;
-  }
   return new Promise((resolve) => {
+    try {
+      execSync(`go build -buildmode=plugin -o drivers/golang.so ${solutionFile}`);
+    } catch (err) {
+      return resolve({ stdout: '', stderr: err, error: err });
+    }
     childProcess = exec(`go run drivers/golang.go ${inputFile} ${state.part}`,
       { cwd: '.' },
       (error, stdout, stderr) => {

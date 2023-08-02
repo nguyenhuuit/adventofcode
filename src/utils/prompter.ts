@@ -54,7 +54,6 @@ export const validate = async (opts: any) => {
         { name: 'Part 2' },
       ]
     });
-    console.log('part', part)
     part = (rs.part === 'Part 1' ? 1 : 2);
   }
   return { year, day, part, language };
