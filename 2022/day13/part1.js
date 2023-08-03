@@ -15,7 +15,7 @@ const compare = (a,b) => {
   }
 }
 
-export export const solution = (input) => {
+export const solution = (input) => {
   return input
     .split(/\n\n/)
     .map((line) => line.split("\n")

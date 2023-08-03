@@ -36,20 +36,21 @@ const App = ({ state }: any) => {
 		setLoading(true)
 		try {
 			const { correct, waitingTime } = await submit();
-			let msg = correct ? 'Right answer!' : 'Wrong answer!'
+			let msg = correct ? chalk.bold(chalk.greenBright('Right answer! 🤩')) : chalk.bold(chalk.red('Wrong answer! 🥹'))
 			if (waitingTime) {
-				msg += ` Waiting ${waitingTime}`
+				msg += chalk.bold(chalk.redBright(` Waiting ${waitingTime} ⏳`))
 			}
 			setOutput(msg)
 			setTsUserName(s => s + 1)
 		} catch (err: any) {
-			setOutput(`Cannot submit answer: ${err}`)
+			setOutput(chalk.bold(chalk.red(`Cannot submit answer: ${err}`)))
 		} finally {
 			setLoading(false)
 		}
 	}
 
 	const executeSolution = async (s: any) => {
+		console.clear()
 		setLoading(true)
 		setOutput('')
 		setPerfLog('')
@@ -163,17 +164,17 @@ const App = ({ state }: any) => {
 	return (
 		<>
 			<Box>
-				<Text>Year:</Text>
+				<Text>📆 Year:</Text>
 				<Text italic bold color={"#FF8800"}> {state.year} </Text>
 				<Text>Day:</Text>
 				<Text italic bold color={"#FF8800"}> {state.day} </Text>
 				<Text>Part:</Text>
 				<Text italic bold color={"#FF8800"}> {part} </Text>
-				<Text>Language:</Text>
+				<Text>| 📘 Language:</Text>
 				<Text italic bold color={"#FF8800"}> {state.language} </Text>
 				{userName && (
 					<>
-						<Text>Username:</Text>
+						<Text>| 👤 Username:</Text>
 						<Text italic bold color={"#FF8800"}> {userName} </Text>
 					</>
 				)}
