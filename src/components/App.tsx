@@ -115,15 +115,19 @@ const App = ({ state }: any) => {
 				break;
 			}
 			case 'c': setOutput(''); break;
-			case '1': {
-				setPart(1);
-				const s = { year: state.year, day: state.day, part: 1, input: inputMode, language: state.language }
-				await executeSolution(s)
-				break;
-			}
-			case '2': {
-				setPart(2);
-				const s = { year: state.year, day: state.day, part: 2, input: inputMode, language: state.language }
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9': {
+				const p = parseInt(input);
+				setPart(p);
+				const s = { year: state.year, day: state.day, part: p, input: inputMode, language: state.language }
 				await executeSolution(s)
 				break;
 			}
