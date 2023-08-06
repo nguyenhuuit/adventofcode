@@ -74,6 +74,7 @@ const App = ({ state }: any) => {
 	useEffect(() => {
 		if (!solutionFileName) return;
 		watcher.add(solutionFileName);
+		watcher.removeAllListeners()
 		watcher.on('change', async () => {
 			const s = { year: state.year, day: state.day, part, input: inputMode, language: state.language }
 			setTsSolutionFile(s => s + 1)
@@ -86,6 +87,7 @@ const App = ({ state }: any) => {
 	useEffect(() => {
 		if (!inputFileName) return;
 		watcher.add(inputFileName);
+		watcher.removeAllListeners()
 		watcher.on('change', async () => {
 			const s = { year: state.year, day: state.day, part, input: inputMode, language: state.language }
 			setTsInputFile(s => s + 1)
