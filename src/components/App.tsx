@@ -54,6 +54,7 @@ const App = ({ state }: any) => {
 		setLoading(true)
 		setOutput('')
 		setPerfLog('')
+		terminate()
 		const { stdout, stderr, error } = await execute(s)
 		if (error) {
 			setAnswer(undefined)
@@ -99,8 +100,9 @@ const App = ({ state }: any) => {
 	}, [inputFileName])
 
 	useInput(async (input, key) => {
-		switch (input) {
+		switch (input.toLowerCase()) {
 			case 'q': {
+				terminate();
 				exit();
 				process.exit();
 			}
