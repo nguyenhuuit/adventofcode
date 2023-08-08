@@ -11,9 +11,9 @@ const decode = (str: string) => {
     .replaceAll('&lt;', '<');
 };
 
-export const useInputFile = (year: string, day: string, inp: string, ts: number) => {
-  const [name, setName] = useState('')
-  const [size, setSize] = useState(0)
+export const useInputFile = (year: string, day: string, inp: string, ts: number): AppFile => {
+  const [name, setName] = useState<string>('')
+  const [size, setSize] = useState<number>(0)
   useEffect(() => {
     const dir = `./${year}/day${day}/`;
     if (!fs.existsSync(dir)) {

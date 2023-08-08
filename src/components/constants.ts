@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 
-const bg = (s: string) => chalk.bold(chalk.greenBright(s))
-const by = (s: string) => chalk.bold(chalk.yellowBright(s))
+const bg = (s: string): string => chalk.bold(chalk.greenBright(s))
+const by = (s: string): string => chalk.bold(chalk.yellowBright(s))
 
 export const HELP_MESSAGE = `Instructions:
 ${by('1')}: Run ${bg('part1')} solution       ${by('Enter')}: Re-run solution

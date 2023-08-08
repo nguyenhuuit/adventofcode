@@ -1,4 +1,4 @@
-export const EXTENSIONS: any = {
+export const EXTENSIONS: { [key: string]: string} = {
   javascript: 'js',
   python: 'py',
   java: 'java',
@@ -38,7 +38,7 @@ class Solution {
   }
 }`;
 
-const GO_TEMPLATE = (state: any) => (
+const GO_TEMPLATE = (state: AppState) => (
   `package main
 
 func Part${state.part}(input string) interface{} {

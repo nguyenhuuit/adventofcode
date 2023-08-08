@@ -1,6 +1,6 @@
 import inquirer from "enquirer";
 
-export const LANGUAGE_MAP: any = {
+export const LANGUAGE_MAP: { [key: string]: string} = {
   Python: 'python',
   python: 'python',
   Javascript: 'javascript',

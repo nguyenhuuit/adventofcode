@@ -5,9 +5,9 @@ import { HOST, VALID_YEARS } from "../constants.js";
 const REGEX_USERNAME = /class="user">(.+?) ?</;
 const REGEX_STAR = /class="star-count">(.+?)\*</;
 
-export const useYearInfo = (year: string, ts: number) => {
-  const [userName, setUserName] = useState<any>('');
-  const [star, setStar] = useState<any>('');
+export const useYearInfo = (year: string, ts: number): AppProfile => {
+  const [userName, setUserName] = useState<string | undefined>('');
+  const [star, setStar] = useState<string | undefined>('');
   useEffect(() => {
     const { SESSION } = process.env;
     if (!SESSION) {

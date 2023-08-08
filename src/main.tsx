@@ -19,16 +19,16 @@ program.parse();
 
 validate(program.opts())
   .then(result => {
-    const initialState: any = {
-      input: 'sample',
-      answer: '123',
-      output: ''
-    };
     const { year, day, part, language } = result;
-    initialState.year = year;
-    initialState.day = day;
-    initialState.part = part;
-    initialState.language = LANGUAGE_MAP[language];
+    const initialState: AppState = {
+      inputMode: 'sample',
+      answer: '123',
+      output: '',
+      year,
+      day,
+      part,
+      language: LANGUAGE_MAP[language] || 'python'
+    };
     render(
       <App state={initialState}/>
     );

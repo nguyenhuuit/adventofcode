@@ -12,13 +12,17 @@ import { useSubmit } from '../hooks/useSubmit.js';
 
 const watcher = chokidar.watch([])
 
-const App = ({ state }: any) => {
+type Props = {
+	state: AppState
+}
+
+const App = ({ state }: Props) => {
 	const {exit} = useApp();
 
 	const [tsUserName, setTsUserName] = useState(0)
 	const { userName, star } = useYearInfo(state.year, tsUserName)
 
-	const [inputMode, setInputMode] = useState(state.input)
+	const [inputMode, setInputMode] = useState(state.inputMode)
 	const [part, setPart] = useState(state.part)
 	const [output, setOutput] = useState(state.output);
 	const [answer, setAnswer] = useState<any>('');
@@ -49,13 +53,13 @@ const App = ({ state }: any) => {
 		}
 	}
 
-	const executeSolution = async (s: any) => {
+	const executeSolution = async (inp: ExecutionInput) => {
 		console.clear()
 		setLoading(true)
 		setOutput('')
 		setPerfLog('')
 		terminate()
-		const { stdout, stderr, error } = await execute(s)
+		const { stdout, stderr, error } = await execute(inp)
 		if (error) {
 			setAnswer(undefined)
 			setPerfLog('')
@@ -77,7 +81,7 @@ const App = ({ state }: any) => {
 		watcher.add(solutionFileName);
 		watcher.removeAllListeners()
 		watcher.on('change', async () => {
-			const s = { year: state.year, day: state.day, part, input: inputMode, language: state.language }
+			const s = { year: state.year, day: state.day, part, inputMode, language: state.language }
 			setTsSolutionFile(s => s + 1)
 			await executeSolution(s)
 		});
@@ -90,7 +94,7 @@ const App = ({ state }: any) => {
 		watcher.add(inputFileName);
 		watcher.removeAllListeners()
 		watcher.on('change', async () => {
-			const s = { year: state.year, day: state.day, part, input: inputMode, language: state.language }
+			const s = { year: state.year, day: state.day, part, inputMode, language: state.language }
 			setTsInputFile(s => s + 1)
 			await executeSolution(s)
 		});
@@ -108,13 +112,13 @@ const App = ({ state }: any) => {
 			}
 			case 'i': {
 				setInputMode("input");
-				const s = { year: state.year, day: state.day, part, input: 'input', language: state.language }
+				const s = { year: state.year, day: state.day, part, inputMode: 'input', language: state.language }
 				await executeSolution(s)
 				break;
 			}
 			case 's': {
 				setInputMode("sample");
-				const s = { year: state.year, day: state.day, part, input: 'sample', language: state.language }
+				const s = { year: state.year, day: state.day, part, inputMode: 'sample', language: state.language }
 				await executeSolution(s)
 				break;
 			}
@@ -129,9 +133,8 @@ const App = ({ state }: any) => {
 			case '7':
 			case '8':
 			case '9': {
-				const p = parseInt(input);
-				setPart(p);
-				const s = { year: state.year, day: state.day, part: p, input: inputMode, language: state.language }
+				setPart(input);
+				const s = { year: state.year, day: state.day, part: input, inputMode, language: state.language }
 				await executeSolution(s)
 				break;
 			}
@@ -151,21 +154,21 @@ const App = ({ state }: any) => {
 		}
 		if (key.downArrow) {
 			setInputMode("input")
-			const s = { year: state.year, day: state.day, part, input: 'input', language: state.language }
+			const s = { year: state.year, day: state.day, part, inputMode: 'input', language: state.language }
 			await executeSolution(s)
 		}
 		if (key.upArrow) {
 			setInputMode("sample")
-			const s = { year: state.year, day: state.day, part, input: 'sample', language: state.language }
+			const s = { year: state.year, day: state.day, part, inputMode: 'sample', language: state.language }
 			await executeSolution(s)
 		}
 		if (key.return) {
-			const s = { year: state.year, day: state.day, part, input: inputMode, language: state.language }
+			const s = { year: state.year, day: state.day, part, inputMode, language: state.language }
 			await executeSolution(s)
 		}
 	})
 	useEffect(() => {
-		const s = { year: state.year, day: state.day, part, input: inputMode, language: state.language }
+		const s = { year: state.year, day: state.day, part, inputMode, language: state.language }
 		executeSolution(s);
 		return () => {}
 	}, [])

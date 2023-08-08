@@ -2,9 +2,9 @@ import fs from 'fs'
 import { EXTENSIONS, TEMPLATES } from '../utils/languages.js'
 import { useEffect, useState } from 'react';
 
-export const useSolutionFile = (year: string, day: string, part: string, language: string, ts: number) => {
-  const [name, setName] = useState('')
-  const [size, setSize] = useState(0)
+export const useSolutionFile = (year: string, day: string, part: string, language: string, ts: number): AppFile => {
+  const [name, setName] = useState<string>('')
+  const [size, setSize] = useState<number>(0)
   useEffect(() => {
     const dir = `./${year}/day${day}/`;
     if (!fs.existsSync(dir)) {
