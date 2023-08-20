@@ -104,5 +104,4 @@ def solution(input):
     root = insertBST(root,i)
   root = deleteBST(root,4)
   printTreeDFS(root,d = "LR",o = "inorder")
-  # printTreeBFS(root)
   return ""
