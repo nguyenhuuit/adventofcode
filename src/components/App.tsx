@@ -65,7 +65,7 @@ const App = ({ state }: Props) => {
 			setPerfLog('')
 			setOutput([stdout, stderr].join('\n'))
 		} else {
-			const lines = stdout.trim().split(/\n/);
+			const lines = stdout.trimRight().split(/\n/);
 			const op = lines.slice(0,lines.length -2).join('\n');
 			const ans = lines[lines.length - 2];
 			const pl = lines[lines.length - 1];

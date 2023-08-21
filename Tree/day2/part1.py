@@ -1,5 +1,6 @@
 from collections import deque
 from random import shuffle
+from customtools import drawTree
 
 class TreeNode:
   def __init__(self,val,l,r,h):
@@ -178,4 +179,11 @@ def solution(input):
       root = deleteAVL(root,i)
       if not check(root):
         return "Delete not OK"
+    
+  ds = [i for i in range(1,17)]
+  shuffle(ds)
+  root = None
+  for i in ds:
+    root = insertAVL(root,TreeNode(i,None,None,1))
+  drawTree(root)
   return "Well done!"
