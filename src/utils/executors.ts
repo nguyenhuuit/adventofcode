@@ -1,4 +1,4 @@
-import { exec, execSync, ChildProcess } from 'child_process';
+import { exec, execSync, ChildProcess, spawn } from 'child_process';
 import { getInputFile, getSolutionFile } from './misc.js';
 
 let childProcess: ChildProcess;
@@ -9,21 +9,20 @@ export const terminate = (): void => {
   }
 }
 
-export const execute = async (state: ExecutionInput): Promise<any> => {
+export const executeAsStream = (state: ExecutionInput): ChildProcess => {
+  terminate()
   switch (state.language) {
-  case 'javascript': {
-    return executeJavascript(state);
-  }
-  case 'python': {
-    return executePython(state);
-  }
-  case 'java': {
-    return executeJava(state);
-  }
-  case 'go': {
-    return executeGolang(state);
-  }
-  default: throw Error('Unknown language');
+    case 'javascript': {
+      return executeJavascript(state);
+    }
+    case 'python': {
+      return executePython(state);
+    }
+
+    case 'go': {
+      return executeGolang(state);
+    }
+    default: throw Error('Unknown language');
   }
 };
   
@@ -47,43 +46,38 @@ const executeJava = async (state: ExecutionInput) => {
     },
   );
 };
-  
-const executePython = (state: ExecutionInput) => {
-  return new Promise((resolve) => {
-    childProcess = exec(`python3 drivers/python.py ${state.year} ${state.day} ${state.part} ${state.inputMode}`,
-      { cwd: '.' },
-      (error, stdout, stderr) => {
-        resolve({ stdout, stderr, error })
-      },
-    );
-  })
-};
-  
+
+const executePython = (state: ExecutionInput): ChildProcess => {
+  childProcess = spawn(
+    'python3',
+    ['-u', 'drivers/python.py', state.year ,state.day, state.part, state.inputMode],
+    { stdio: ['pipe', 'pipe', 'pipe', 'ipc']}
+  )
+  return childProcess
+}
+
 const executeJavascript = (state: ExecutionInput) => {
-  return new Promise((resolve) => {
-    childProcess = exec(`node drivers/javascript.js ${state.year} ${state.day} ${state.part} ${state.inputMode}`,
-      { cwd: '.' },
-      (error, stdout, stderr) => {
-        resolve({ stdout, stderr, error })
-      },
-    );
-  })
+  childProcess = spawn('node',
+    ['drivers/javascript.js', state.year, state.day, state.part, state.inputMode],
+    {
+      cwd: '.',
+      stdio: ['pipe', 'pipe', 'pipe', 'ipc']
+    },
+  );
+  return childProcess
 };
 
-const executeGolang = (state: ExecutionInput): Promise<ExecutionResult> => {
+const executeGolang = (state: ExecutionInput): ChildProcess => {
   const solutionFile = getSolutionFile(state);
   const inputFile = getInputFile(state);
-  return new Promise((resolve) => {
-    try {
-      execSync(`go build -buildmode=plugin -o drivers/golang.so ${solutionFile}`);
-    } catch (err) {
-      return resolve({ stdout: '', stderr: `${err}`, error: err });
-    }
-    childProcess = exec(`go run drivers/golang.go ${inputFile} ${state.part}`,
-      { cwd: '.' },
-      (error, stdout, stderr) => {
-        resolve({ stdout, stderr, error })
-      },
-    );
-  });
+  execSync(`go build -buildmode=plugin -o drivers/golang.so ${solutionFile}`);
+  childProcess = spawn(
+    'go',
+    ['run', 'drivers/golang.go', inputFile, state.part],
+    {
+      cwd: '.',
+      stdio: ['pipe', 'pipe', 'pipe', 'ipc']
+    },
+  );
+  return childProcess
 };

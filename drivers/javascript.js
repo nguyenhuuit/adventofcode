@@ -9,11 +9,14 @@ const input = process.argv[5];
 const solutionFile = path.resolve(`./${year}/day${day}/part${part}.js`);
 const inputFile = `./${year}/day${day}/${input}.txt`;
 
-import(solutionFile).then(({ solution }) => {
+import(solutionFile).then(async ({ solution }) => {
   const input = fs.readFileSync(inputFile, 'utf8');
   const before = performance.now();
-  const rs = solution(input);
+  const rs = await solution(input);
   const after = performance.now();
-  log(rs);
-  log(`${(after-before).toFixed(3)}ms`);
+  const dt = {
+    result: rs,
+    time: `${(after-before).toFixed(3)}ms`
+  }
+  process.send && process.send(dt);
 });

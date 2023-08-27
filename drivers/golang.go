@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"plugin"
@@ -25,6 +26,17 @@ func main() {
 	start := time.Now()
 	rs := solution.(func(string) interface{})(string(inp))
 	timeElapsed := time.Since(start)
-	fmt.Println(rs)
-	fmt.Println(timeElapsed)
+	payload := map[string]interface{}{
+		"result": rs,
+		"time":   fmt.Sprint(timeElapsed),
+	}
+	js, err := json.Marshal(payload)
+	if err != nil {
+		panic(err)
+	}
+	fd := os.NewFile(3, "ipc")
+	_, err = fd.Write([]byte(string(js) + "\n"))
+	if err != nil {
+		panic(err)
+	}
 }

@@ -5,10 +5,11 @@ import chalk from 'chalk';
 import Spinner from './Spinner.js';
 import { useSolutionFile } from '../hooks/useSolutionFile.js';
 import { useInputFile } from '../hooks/useInputFile.js';
-import { execute, terminate } from '../utils/executors.js'
+import { terminate } from '../utils/executors.js'
 import { HELP_MESSAGE } from './constants.js';
 import { useYearInfo } from '../hooks/useYearInfo.js';
 import { useSubmit } from '../hooks/useSubmit.js';
+import { useExecuteAsStream } from '../hooks/useExecuteAsStream.js';
 
 const watcher = chokidar.watch([])
 
@@ -34,6 +35,14 @@ const App = ({ state }: Props) => {
 	const [tsInputFile, setTsInputFile] = useState(0)
 	const { name: inputFileName, size: inputFileSize } = useInputFile(state.year, state.day, inputMode, tsInputFile);
 
+	const executeSolution = useExecuteAsStream({
+		onOutput: (s: string) => setOutput(current => current ? current + s : s),
+		onResult: (s: string) => setAnswer(s),
+		onExecutionTime: (s: string) => setPerfLog(s),
+		onStart: () => { setLoading(true); setOutput(""); },
+		onExit: () => setLoading(false)
+	})
+
 	const submit = useSubmit(state.year, state.day, part, answer);
 
 	const handleSubmit = async () => {
@@ -53,29 +62,6 @@ const App = ({ state }: Props) => {
 		}
 	}
 
-	const executeSolution = async (inp: ExecutionInput) => {
-		console.clear()
-		setLoading(true)
-		setOutput('')
-		setPerfLog('')
-		terminate()
-		const { stdout, stderr, error } = await execute(inp)
-		if (error) {
-			setAnswer(undefined)
-			setPerfLog('')
-			setOutput([stdout, stderr].join('\n'))
-		} else {
-			const lines = stdout.trimRight().split(/\n/);
-			const op = lines.slice(0,lines.length -2).join('\n');
-			const ans = lines[lines.length - 2];
-			const pl = lines[lines.length - 1];
-			setAnswer(ans)
-			setOutput(op)
-			setPerfLog(pl)
-		}
-		setLoading(false)
-	}
-
 	useEffect(() => {
 		if (!solutionFileName) return;
 		watcher.add(solutionFileName);
@@ -83,7 +69,7 @@ const App = ({ state }: Props) => {
 		watcher.on('change', async () => {
 			const s = { year: state.year, day: state.day, part, inputMode, language: state.language }
 			setTsSolutionFile(s => s + 1)
-			await executeSolution(s)
+			executeSolution(s)
 		});
 		return () => {
 			watcher.unwatch(solutionFileName)
@@ -96,7 +82,7 @@ const App = ({ state }: Props) => {
 		watcher.on('change', async () => {
 			const s = { year: state.year, day: state.day, part, inputMode, language: state.language }
 			setTsInputFile(s => s + 1)
-			await executeSolution(s)
+			executeSolution(s)
 		});
 		return () => {
 			watcher.unwatch(inputFileName)
@@ -113,13 +99,13 @@ const App = ({ state }: Props) => {
 			case 'i': {
 				setInputMode("input");
 				const s = { year: state.year, day: state.day, part, inputMode: 'input', language: state.language }
-				await executeSolution(s)
+				executeSolution(s)
 				break;
 			}
 			case 's': {
 				setInputMode("sample");
 				const s = { year: state.year, day: state.day, part, inputMode: 'sample', language: state.language }
-				await executeSolution(s)
+				executeSolution(s)
 				break;
 			}
 			case 'c': setOutput(''); break;
@@ -135,12 +121,14 @@ const App = ({ state }: Props) => {
 			case '9': {
 				setPart(input);
 				const s = { year: state.year, day: state.day, part: input, inputMode, language: state.language }
-				await executeSolution(s)
+				executeSolution(s)
 				break;
 			}
 			case 'x': {
-				terminate();
-				setTimeout(() => setOutput('Terminated!'), 100)
+				if (loading) {
+					terminate();
+					setTimeout(() => setOutput('Terminated!'), 100)
+				}
 				break;
 			}
 			case 'h': {
@@ -155,21 +143,21 @@ const App = ({ state }: Props) => {
 		if (key.downArrow) {
 			setInputMode("input")
 			const s = { year: state.year, day: state.day, part, inputMode: 'input', language: state.language }
-			await executeSolution(s)
+			executeSolution(s)
 		}
 		if (key.upArrow) {
 			setInputMode("sample")
 			const s = { year: state.year, day: state.day, part, inputMode: 'sample', language: state.language }
-			await executeSolution(s)
+			executeSolution(s)
 		}
 		if (key.return) {
 			const s = { year: state.year, day: state.day, part, inputMode, language: state.language }
-			await executeSolution(s)
+			executeSolution(s)
 		}
 	})
 	useEffect(() => {
 		const s = { year: state.year, day: state.day, part, inputMode, language: state.language }
-		executeSolution(s);
+		executeSolution(s)
 		return () => {}
 	}, [])
 	return (

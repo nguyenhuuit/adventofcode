@@ -2,6 +2,7 @@ import sys
 import os
 import time
 import importlib
+import json
 
 args = sys.argv
 year = args[1]
@@ -21,5 +22,8 @@ with open(os.path.abspath(input_file)) as inp:
   rs = mod.solution(input_text)
   end_time = time.perf_counter_ns()
   execution_time = (end_time - start_time)/1000000
-  print(rs);
-  print("{:.3f}ms".format(execution_time))
+  dt = {
+    "result": rs,
+    "time": "{:.3f}ms".format(execution_time)
+  }
+  os.write(3, (json.dumps(dt) + "\n").encode())
