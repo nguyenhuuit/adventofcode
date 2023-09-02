@@ -38,6 +38,8 @@ export const useSubmit = (year: string, day: string, part: string, answer: strin
           return resolve({ correct: false, waitingTime: matches[1] })
         }
         return reject('Unknown response');
+      }).catch(err => {
+        return reject(err);
       });
     })
   }, [year, day, part, answer]);

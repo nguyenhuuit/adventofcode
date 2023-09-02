@@ -50,7 +50,7 @@ const executeJava = async (state: ExecutionInput) => {
 const executePython = (state: ExecutionInput): ChildProcess => {
   childProcess = spawn(
     'python3',
-    ['-u', 'drivers/python.py', state.year ,state.day, state.part, state.inputMode],
+    ['-u', 'src/drivers/python.py', state.year ,state.day, state.part, state.inputMode],
     { stdio: ['pipe', 'pipe', 'pipe', 'ipc']}
   )
   return childProcess
@@ -58,7 +58,7 @@ const executePython = (state: ExecutionInput): ChildProcess => {
 
 const executeJavascript = (state: ExecutionInput) => {
   childProcess = spawn('node',
-    ['drivers/javascript.js', state.year, state.day, state.part, state.inputMode],
+    ['src/drivers/javascript.js', state.year, state.day, state.part, state.inputMode],
     {
       cwd: '.',
       stdio: ['pipe', 'pipe', 'pipe', 'ipc']
@@ -73,7 +73,7 @@ const executeGolang = (state: ExecutionInput): ChildProcess => {
   execSync(`go build -buildmode=plugin -o drivers/golang.so ${solutionFile}`);
   childProcess = spawn(
     'go',
-    ['run', 'drivers/golang.go', inputFile, state.part],
+    ['run', 'src/drivers/golang.go', inputFile],
     {
       cwd: '.',
       stdio: ['pipe', 'pipe', 'pipe', 'ipc']

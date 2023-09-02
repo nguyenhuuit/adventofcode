@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"plugin"
+	"strconv"
 	"time"
 )
 
@@ -13,10 +14,16 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	part := os.Args[2]
-	solution, err := p.Lookup("Part" + part)
-	if err != nil {
-		panic(err)
+	var solution plugin.Symbol
+	for part := 1; part < 100; part++ {
+		solution, err = p.Lookup("Part" + strconv.Itoa(part))
+		if solution != nil {
+			break
+		}
+	}
+
+	if solution == nil && err != nil {
+		panic("Cannot find symbol")
 	}
 	file := os.Args[1]
 	inp, err := os.ReadFile(file)

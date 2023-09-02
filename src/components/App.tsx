@@ -181,7 +181,7 @@ const App = ({ state }: Props) => {
 			</Box>
 			<Box height={1}/>
 			<Box width={100}>
-				<Box flexDirection="column" width={50}>
+				<Box flexDirection="column" width={70}>
 					<Text>{`Solution file: ${chalk.bold(chalk.magentaBright(solutionFileName.slice(2)))} ${solutionFileSize} bytes`}</Text>
 					<Text>{`   Input file: ${chalk.bold(chalk.magentaBright(inputFileName.slice(2)))} ${inputFileSize} bytes`}</Text>
 				</Box>
