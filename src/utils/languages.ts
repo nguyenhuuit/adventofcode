@@ -17,24 +17,9 @@ const JAVASCRIPT_TEMPLATE =
 `;
 
 const JAVA_TEMPLATE =
-`import java.nio.file.Files;
-import java.nio.file.Path;
-
-class Solution {
-  public static void log(Object o) {
-    System.out.println(o);
-  }
+`class Solution {
   public static String solve(String input) {
     return null;
-  } 
-  public static void main(String[] args) {
-    try {
-      String input = Files.readString(Path.of(args[0]));
-      System.out.println(solve(input));
-    } catch(Exception ex) {
-      System.out.println(ex);
-      System.exit(1);
-    }
   }
 }`;
 

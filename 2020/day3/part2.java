@@ -1,10 +1,4 @@
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 class Solution {
-  public static void log(Object o) {
-    System.out.println(o);
-  }
   public static long countTree(String[] lines, int dRow, int dCol) {
     int width = lines[0].length();
     int row = 0;
@@ -28,14 +22,5 @@ class Solution {
       countTree(lines, 1, 7) *
       countTree(lines, 2, 1);
     return Long.toString(rs);
-  } 
-  public static void main(String[] args) {
-    try {
-      String input = Files.readString(Path.of(args[0]));
-      System.out.println(solve(input));
-    } catch(Exception ex) {
-      System.out.println(ex);
-      System.exit(1);
-    }
   }
 }

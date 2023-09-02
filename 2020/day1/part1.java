@@ -1,5 +1,3 @@
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashSet;
 
 class Solution {
@@ -15,14 +13,5 @@ class Solution {
       }
     }
     return input;
-  } 
-  public static void main(String[] args) {
-    try {
-      String input = Files.readString(Path.of(args[0]));
-      System.out.println(solve(input));
-    } catch(Exception ex) {
-      System.out.println(ex);
-      System.exit(1);
-    }
   }
 }
