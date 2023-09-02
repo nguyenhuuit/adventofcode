@@ -22,7 +22,7 @@
     "react": "^18.2.0"
   },
   "devDependencies": {
-    "@sindresorhus/tsconfig": "^3.0.1",
+    "@sindresorhus/tsconfig": "^4.0.0",
     "@types/ink-spinner": "^3.0.1",
     "eslint": "^8.44.0",
     "ts-node": "^10.9.1",
