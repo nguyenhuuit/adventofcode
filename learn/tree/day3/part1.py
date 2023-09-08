@@ -1,3 +1,5 @@
+import heapq
+
 def heapify(ls):
   while True:
     a = False
@@ -60,7 +62,7 @@ def heappop(ls):
 
 def solution(input):
   ls = [8,7,6,5,4,3,1]
-  heapify(ls)
-  heappush(ls,2)
+  heapq.heapify(ls)
+  print(heapq.nlargest(2,ls))
   return str(ls)
   
