@@ -32,8 +32,7 @@ def insertTrie(root,value):
     insertTrie(root.children[i],value[1:])
     
 def printTrie(root,prefix):
-  if root.end:
-    print(prefix)
+  print(prefix)
   for i in range(62):
     if root.children[i] != None:
       printTrie(root.children[i],prefix+getchr(i))
@@ -47,12 +46,23 @@ def searchTrie(root,value):
     return False
   return searchTrie(root.children[i], value[1:])
    
+def deleteTrie(root,value):
+  if value == "":
+    root.end = False
+  else:
+    i = getindex(value[0])
+    root.children[i] = deleteTrie(root.children[i],value[1:])
+
+  if any(root.children):
+    return root
+  return None
   
 def solution(input):
   root = TrieNode()
   insertTrie(root,"aa")
   insertTrie(root,"ab")
   insertTrie(root,"acd")
-  insertTrie(root,"123Aa")
+  insertTrie(root,"cd")
+  deleteTrie(root,"aa")
   printTrie(root,"")
   print(searchTrie(root,"aaz"))
