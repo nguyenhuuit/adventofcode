@@ -1,6 +1,7 @@
 from random import shuffle
 
-def my_sort(a):
+#All my sort
+def exchange_sort(a):
   l = len(a)
   for i in range(l):
     for j in range(i,l):
