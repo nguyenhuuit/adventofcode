@@ -29,16 +29,35 @@ def quick_sort_last(a):
     sort(l,i-1)
     sort(i+1,r)
   sort(0,len(a)-1)
-  
+
+def merge(a,b):
+  i = 0
+  j = 0
+  k = []
+  while i != len(a) and j != len(b):
+    if a[i] > b[j]:
+      k.append(b[j])
+      j += 1
+    else:
+      k.append(a[i])
+      i += 1
+  if i == len(a):
+    k.extend(b[j:])
+  else:
+    k.extend(a[i:])  
+  return k
+
 def merge_sort(a):
-  pass
+  if len(a) == 1:
+    return a
+  m1 = merge_sort(a[:len(a)//2])
+  m2 = merge_sort(a[len(a)//2:])
+  return merge(m1,m2)
       
 def solution(input):
-  d = [i for i in range(10)]
+  d = [i for i in range(100)]
   shuffle(d)
   d1 = d.copy()
-  d2 = d.copy()
   d.sort()
-  quick_sort_first(d1)
-  quick_sort_last(d2)
-  return "last:"+str(d2==d)," ","first:"+str(d1==d)
+  d1 = merge_sort(d1)
+  return str(d1 == d)
