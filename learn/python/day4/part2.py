@@ -53,11 +53,29 @@ def merge_sort(a):
   m1 = merge_sort(a[:len(a)//2])
   m2 = merge_sort(a[len(a)//2:])
   return merge(m1,m2)
+
+def heap_sort(a):
+  def heapify():
+    for i in range(l//2-1,-1,-1):
+      m = a[i]
+      if i * 2 + 2 <= l-1:
+        m = max(m, a[i * 2 + 1], a[i * 2 + 2])
+      else:
+        m = max(m,a[i * 2 + 1])
+      if m == a[i * 2 + 1]:
+        a[i],a[i * 2 + 1] = a[i * 2 + 1],a[i]
+      elif i * 2 + 2 <= l-1 and m == a[i * 2 + 2]:
+        a[i], a[i * 2 + 2] = a[i * 2 + 2],a[i]
+  l = len(a)
+  for i in range(len(a)-1):
+    heapify()
+    a[0],a[l-1] = a[l-1],a[0]
+    l -= 1
       
 def solution(input):
-  d = [i for i in range(100)]
+  d = [i for i in range(10000)]
   shuffle(d)
   d1 = d.copy()
   d.sort()
-  d1 = merge_sort(d1)
+  heap_sort(d1)
   return str(d1 == d)
