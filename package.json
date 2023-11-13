@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@sindresorhus/tsconfig": "^4.0.0",
-    "@types/ink-spinner": "^3.0.1",
+    "@types/ink-spinner": "^3.0.4",
     "eslint": "^8.48.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
