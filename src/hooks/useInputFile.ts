@@ -3,13 +3,26 @@ import fs from 'fs';
 import { useEffect, useState } from "react";
 import { HOST, VALID_YEARS } from '../constants.js';
 
-const SAMPLE_REGEX = /\(your puzzle input\)[\s\S]*?<code>([\s\S]+?)<\/code>/;
-
 const decode = (str: string) => {
   return str
     .replaceAll('&gt;', '>')
-    .replaceAll('&lt;', '<');
+    .replaceAll('&lt;', '<')
+    .replaceAll('<code>', '')
+    .replaceAll('</code>', '')
+    .replaceAll('<em>', '')
+    .replaceAll('</em>', '')
+    ;
 };
+
+const findLongest = (str: string[]) => {
+  let longest = ''
+  str.forEach((s: string) => {
+    if (s.length > longest.length) {
+      longest = s
+    }
+  })
+  return longest
+}
 
 export const useInputFile = (year: string, day: string, inp: string, ts: number): AppFile => {
   const [name, setName] = useState<string>('')
@@ -56,9 +69,10 @@ export const useInputFile = (year: string, day: string, inp: string, ts: number)
         }
       }).then(res => {
         if (res.data) {
+          const SAMPLE_REGEX = /<code>(<em>)?([\s\S]+?)(<\/em>)?<\/code>/g;
           const matches = res.data.match(SAMPLE_REGEX);
           if (matches) {
-            fs.writeFileSync(file, decode(matches[1]).trim());
+            fs.writeFileSync(file, decode(findLongest(matches)).trim());
             const stats = fs.statSync(file)
             setSize(stats.size);
           }
