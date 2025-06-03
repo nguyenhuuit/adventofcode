@@ -1,11 +1,10 @@
+# frozen_string_literal: true
+
 def functional_style(input)
   lefts, rights = input.split("\n").map { |line| line.split('   ') }.transpose
 
   counts = rights.tally
-
-  similarity = lefts.sum { |left| counts[left].to_i * left.to_i }
-
-  return similarity
+  lefts.sum { |left| counts[left].to_i * left.to_i }
 end
 
 def imperative_style(input)
@@ -15,7 +14,7 @@ def imperative_style(input)
   rights = Hash.new(0)
 
   for line in lines
-    left, right = line.split("   ")
+    left, right = line.split('   ')
     lefts << left
     rights[right] += 1
   end
@@ -25,7 +24,7 @@ def imperative_style(input)
     similarity += left.to_i * rights[left]
   end
 
-  return similarity
+  similarity
 end
 
 def solution(input)
@@ -33,5 +32,6 @@ def solution(input)
   imperative_result = imperative_style(input)
   puts "Functional result: #{functional_result}"
   puts "Imparative result: #{imperative_result}"
-  return functional_result
+
+  functional_result
 end

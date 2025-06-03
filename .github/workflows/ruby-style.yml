@@ -1,0 +1,29 @@
+name: Ruby Style Check
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+     - '**/*.rb'
+
+jobs:
+  style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+      
+      - name: Install RuboCop and extensions
+        run: |
+          gem install rubocop
+          gem install rubocop-rake
+          gem install rubocop-rspec
+      
+      - name: Run RuboCop
+        continue-on-error: true
+        run: rubocop 
