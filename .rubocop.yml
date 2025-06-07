@@ -30,3 +30,6 @@ Metrics/AbcSize:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Max: 10
