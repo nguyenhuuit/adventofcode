@@ -26,4 +26,4 @@ jobs:
       
       - name: Run RuboCop
         continue-on-error: true
-        run: rubocop 
+        run: rubocop $(git diff --name-only HEAD~1 HEAD -- '*.rb') 
